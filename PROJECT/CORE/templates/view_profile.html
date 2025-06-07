@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Profile</title>
+    <link rel="stylesheet" href="{% static 'view_profile.css' %}">
+    <style>
+         .cover {
+      width: 70%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      z-index: 0;
+      box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+      left: 100px;
+      position: relative;
+      
+    }
+       
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2560px-Instagram_logo_2022.svg.png" alt="Instagram Logo">
+        <div>Instagram</div>
+        <div class="menu">
+            <div>☰</div>
+            <button onclick="window.location.href = '{% url 'dashboard' %}';">NewsFeed</button>
+        </div>
+    </header>
+    <div class="profile-container">
+        {% if cover_photo %}
+        <img src="{{ cover_photo.coverphoto.url }}" alt="Cover Photo" class="cover"/>
+        {% else %}
+        <img src="{% static 'default_cover.jpg' %}" alt="No Cover Photo" class="cover"/>
+        {% endif %}
+        <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+        <div class="profile-info">
+            <p><strong>{{ user.f_name }} {{ user.l_name }}</strong></p>
+            <p class="bio">Bio:{{ user.profile.bio }}</p>
+        </div>
+        <div class="profile-actions">
+            {% if user.id != request.user.id %}
+            <button onclick="window.location.href = '{% url 'send_message' user.id %}';">Send Message</button>
+            <button onclick="window.location.href = '{% url 'add_friend' user.id %}';">Follow</button>
+            {% else %}
+            <button style="display: none;">Send Message</button>
+            <button style="display: none;">Follow</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="posts-container">
+        {% for post in posts %}
+        <div class="post">
+            {% for image in post_images %}
+                {% if image.post == post %}
+                <img src="{{ image.image.url }}" alt="Post Image">
+                {% endif %}
+            {% endfor %}
+            <div class="post-details">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
+                <p class="created-at">Created at: {{ post.created_at }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="footer">
+        <a href="#">About</a> | <a href="#">Help</a> | <a href="#">Press</a> | <a href="#">API</a> | <a href="#">Jobs</a>
+    </div>
+</body>
+
+</html>

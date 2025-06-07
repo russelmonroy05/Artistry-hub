@@ -1,0 +1,350 @@
+/* General Reset and Box Sizing */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Body Styling */
+  body {
+    font-family: 'Dancing Script', cursive;
+    background-color: #fafafa;
+  }
+  body ::-webkit-scrollbar, .side-container {
+    display: none;
+  }
+
+  /* Header Styling */
+  header {
+    background-color: white;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid #e6e6e6;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  header img {
+    height: 30px;
+  }
+
+  header button {
+    background-color: #3897f0;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  header button:hover {
+    background-color: #287ab3;
+  }
+
+  /* Profile Section Styling */
+  .profile-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: white;
+    margin-top: 20px;
+    padding-bottom: 100px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    position: relative;
+    left: 10px;
+    border:1px solid #cdced1;
+    max-width: 1880px;
+    border-radius: 20px;
+    
+  }
+
+  .profile-details {
+    display: flex;
+    align-items: center;
+    z-index: 1;
+    position: relative;
+    right: 650px;
+    top: 260px;
+  }
+
+  .profile-details img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 20px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    bottom: 70px;
+    position: relative;
+    right: 10px;
+    border:2px solid #287ab3;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .profile-info p {
+    margin: 5px 0;
+    position: relative;
+    top:20px;
+  }
+
+  .profile-info strong {
+    font-size: 20px;
+  }
+
+  .bio {
+    color: #8e8e8e;
+  
+  }
+
+  .edit-profile-btn {
+    margin-top: 10px;
+    background-color: #f0f2f5;
+    border:1px solid #e4e6eb;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transition: background-color 0.3s ease;
+    position: relative;
+    right: 100px;
+    bottom: 60px;
+  }
+  .edit-profile-btn1 {
+    margin-top: 10px;
+    background-color: #f0f2f5;
+    border:1px solid #e4e6eb;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transition: background-color 0.3s ease;
+    position: relative;
+    z-index: 1;
+    left: 20px;
+    bottom: 110px;
+  }
+  .edit-profile-btn1 i {
+    font-size: 30px;
+    color: #65676b;
+    
+  }
+
+  .edit-profile-btn:hover {
+    background-color: #e4e6eb;
+  }
+
+  .edit-profile-btn i {
+    font-size: 20px;
+    color: #65676b;
+    
+  }
+
+  /* Friend Request List Styling */
+  .friend-request-list {
+    width: 500px;
+    padding: 10px;
+    border-left: 1px solid #e6e6e6;
+    position: relative;
+    border-radius: 10px;
+    background-color: #f0f2f5;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    position: relative;
+    text-align: center;
+    justify-self: unset;
+    right: 40PX;
+    max-height: 600px;
+    overflow: scroll;
+    
+  }
+
+  .friend-request-list::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .friend-request-list h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: 'Dancing Script', cursive;
+  }
+
+  .friend-request {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 30px;
+    border-radius: 40px;
+  }
+  .friend-request:hover{
+    background-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transition: box-shadow 0.3s ease, transform 0.1s ease;
+    cursor: pointer;
+
+  }
+
+  .friend-request img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+
+  .friend-request h3 {
+    font-size: 16px;
+    margin: 10px;
+    font-weight:bolder;
+  }
+  .friend-request p {
+    font-size: 13px;
+    margin: 2px;
+    font-weight:normal;
+    font-family: 'Dancing Script', cursive;
+  }
+
+  /* Posts Section Styling */
+  .posts-container {
+    display: grid;
+    grid-template-columns: repeat(4, 5fr);
+    gap: 20px;
+    padding: 60px;
+    position: relative;
+    left:10px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    max-width: 1880px;
+    border-radius: 20px;
+    top: 20px;
+    z-index: 1;
+
+  }
+  .post:hover{
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    transform: translateY(-10px);
+    transition: box-shadow 0.3s ease, transform 0.1s ease;
+    cursor: pointer;
+
+  }
+
+  .post{
+    background-color: rgb(146, 45, 45);
+    border-radius: 10px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    width:80%;
+    max-height: 500px;
+    overflow: scroll;
+  }
+
+  .post img {
+    width: 100%;
+    height: 300px;
+    display: block;
+  }
+
+  .post-details {
+    padding: 10px;
+    font-size: 14px;
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    color: #f0f2f5;
+
+  }
+
+  .post-details p {
+    margin-bottom: 5px;
+    color: aliceblue;
+  }
+
+  .created-at {
+    color: #8e8e8e;
+    font-size: 12px;
+  }
+
+  /* Footer Styling */
+  .footer {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    z-index: 0;
+    position: relative;
+    top: 50px;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #e6e6e6
+  }
+
+  .footer a {
+    text-decoration: none;
+    color: #3897f0;
+    font-weight: bold;
+    margin: 0 5px;
+  }
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+  }
+
+  .close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .btn:hover {
+    background-color: #45a049;
+  }

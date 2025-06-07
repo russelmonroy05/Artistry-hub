@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Artistry Hub</title>
+    <link rel="stylesheet" href="{% static 'welcomepage.css' %}" />
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>Artistry Hub</h1>
+      <nav>
+        <a id="about-link">About</a>
+      </nav>
+    </header>
+
+    <!-- Welcome Section -->
+    <div class="welcome-container">
+      <h1>Welcome to Artistry Hub</h1>
+      <p>
+        Connect, share, and explore the world of art. Discover masterpieces and
+        showcase your own!
+      </p>
+      <div class="btn-group">
+        <a href="{% url 'login' %}" class="btn">Login</a>
+        <a href="{% url 'signup' %}" class="btn">Register</a>
+      </div>
+    </div>
+
+    <!-- Hidden Section -->
+    <div id="hidden-section" class="hidden-section">
+      <h2>Discover More About Artistry Hub</h2>
+      <p>
+        Artistry Hub isn't just a platform; it's a community where creativity
+        thrives. Dive into curated collections of artwork, participate in art
+        challenges, and connect with artists around the globe.
+        Artistry Hub is far more than just a platform; it's a vibrant and inclusive community where creativity knows no bounds.
+        Whether you're an established artist, an aspiring creator, or someone who simply appreciates the beauty of art, Artistry
+        Hub provides a welcoming space for everyone. Here, you can dive into meticulously curated collections of breathtaking
+        artwork, showcasing diverse styles and techniques from artists across the globe.
+      </p>
+      <p>
+        Our mission is to bring together artists of all levels to inspire,
+        learn, and grow together. Join us today and become a part of this
+        incredible journey!
+        Participate in engaging art challenges to test your skills, explore new mediums, and ignite your imagination. Share your
+        masterpieces with a supportive audience and gain constructive feedback that helps you grow. Our platform encourages
+        meaningful connections, allowing you to interact with like-minded individuals, collaborate on projects, and build
+        lasting relationships with fellow artists.
+        
+        Artistry Hub is built on the belief that art has the power to inspire and transform lives. Our mission is to create a
+        nurturing environment where artists of all levels can learn, share, and evolve together. Whether you're looking to learn
+        new techniques, find inspiration, or showcase your work to a global audience, Artistry Hub is your ultimate destination.
+        
+        Join us today to unlock a world of inspiration, creativity, and endless possibilities. Let’s shape the future of art
+        together, one masterpiece at a time!
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2024 Artistry Hub. All rights reserved.</p>
+      <p>
+        Follow us on:
+        <a href="https://facebook.com">Facebook</a> |
+        <a href="https://twitter.com">Twitter</a> |
+        <a href="https://instagram.com">Instagram</a>
+      </p>
+    </footer>
+
+    <script>
+      // JavaScript to toggle the visibility of the hidden section
+      document
+        .getElementById("about-link")
+        .addEventListener("click", function () {
+          const hiddenSection = document.getElementById("hidden-section");
+          if (
+            hiddenSection.style.display === "none" ||
+            hiddenSection.style.display === ""
+          ) {
+            hiddenSection.style.display = "block";
+          } else {
+            hiddenSection.style.display = "none";
+          }
+        });
+    </script>
+  </body>
+</html>

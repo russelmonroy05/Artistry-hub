@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messenger Chat</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'conversation_detail.css' %}">
+  <style>
+
+
+  </style>
+</head>
+
+<body>
+
+  <div class="chat-container">
+    <header class="header">
+      <img src="{{ conversation.recipient.profile.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+      <span class="user-name">{{ conversation.recipient.f_name }} {{ conversation.recipient.l_name }}</span>
+    </header>
+
+    <div class="messages-area">
+      {% for message in messages %}
+      <div class="message-container {% if message.user.id == request.session.user_id %}user{% else %}other{% endif %}">
+        <div class="profile-pic">
+          <img src="{{ message.user.profile.profile_picture.url }}" alt="Profile Picture">
+        </div>
+        <div class="message {% if message.user.id == request.session.user_id %}user{% else %}other{% endif %}">
+          <p>{{ message.user.f_name }}: {{ message.message }}</p>
+          <small>{{ message.timestamp|date:"M d, Y, h:i a" }}</small>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" class="chat-form">
+      {% csrf_token %}
+      <textarea name="message" rows="2" placeholder="Type a message..."></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+</body>
+
+</html>

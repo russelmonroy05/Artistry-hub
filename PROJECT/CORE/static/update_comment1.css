@@ -1,0 +1,96 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Wrapper */
+.comment-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    min-height: 100vh;
+}
+
+/* Card Container */
+.comment-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Form Title */
+.form-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 30px;
+}
+
+/* Form Styling */
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Input Fields */
+.comment-form p {
+    margin: 0;
+}
+
+.comment-form textarea,
+.comment-form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9fafb;
+}
+
+/* Buttons */
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+/* Primary (Submit) */
+.primary-btn {
+    background-color: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+.primary-btn:hover {
+    background-color: #1e40af;
+    border-color: #1e40af;
+}
+
+/* Secondary (Cancel) */
+.secondary-btn {
+    background-color: transparent;
+    color: #374151;
+    border: 2px solid #d1d5db;
+}
+
+.secondary-btn:hover {
+    background-color: #f3f4f6;
+}

@@ -1,0 +1,84 @@
+.login-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.logo img {
+    width: 175px;
+    margin-bottom: 1.5rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fafafa;
+}
+
+input:focus {
+    outline: none;
+    border-color: #a8a8a8;
+}
+
+button {
+    padding: 0.8rem;
+    background-color: #3897f0;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3079d6;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #dbdbdb;
+}
+
+.divider span {
+    margin: 0 1rem;
+    color: #8e8e8e;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.signup {
+    font-size: 14px;
+    margin-top: 1rem;
+}
+
+.signup a {
+    color: #3897f0;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup a:hover {
+    text-decoration: underline;
+}

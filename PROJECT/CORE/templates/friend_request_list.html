@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Friend Request List</h1>
+    {% for friend_request in friend_requests %}
+    <a href="{% url 'view_profile' friend_request.user.id %}">
+        <img src="{{ friend_request.user.profile.profile_picture.url }}" alt="Profile Picture">
+        <h3>{{ friend_request.user.f_name }} {{ friend_request.user.l_name }}</h3>
+    </a>
+    <p>Want's to be friends with you!</p>
+    {% endfor %}
+
+</body>
+
+</html>

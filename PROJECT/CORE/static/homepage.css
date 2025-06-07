@@ -1,0 +1,510 @@
+/* General Styles */
+:root{
+    --background-color: #ebe3db;
+    --background1-color: #f1f1f1;
+    --background2-color:#3498db;
+    --background3-color:transparent;
+    --text-color: #333;
+    --header-bg-color: #ffffff;
+    --header-text-color: #4a90e2;
+    --link-hover-color: #4a90e2;
+}
+
+body.dark-mode {
+    --background-color: #1e1e1e;
+    --background1-color: #1e1e1e;
+    --background3-color:transparent;
+    --background2-color: transparent;
+    --text-color: #f1f1f1;
+    --header-bg-color: #333333;
+    --header-text-color: #ffcc00;
+    --link-hover-color: #ffcc00;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--header-text-color);
+    font-size: 15px;
+}
+
+body {
+    font-family: 'Dancing Script', cursive;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Header */
+header {
+    background-color: var(--header-bg-color);
+    border-bottom: 2px solid #705690;
+    padding: 10px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    font-size: 24px;
+    color: var(--header-text-color);
+}
+
+.nav-links a {
+    font-size: 16px;
+    margin: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    color: #302b2b;
+    position: relative;
+    transition: color 0.3s ease;
+    left: 230px;
+}
+
+.nav-links a:hover {
+    color: var(--link-hover-color);
+}
+
+.nav-links a i {
+    margin-right: 8px;
+}
+
+/* Friend Request List Header */
+.friend-request-list-header {
+    width: 525px;
+    text-align: center;
+    background-color: #3498db;
+    color: white;
+    position: sticky;
+    left: 1360px;
+    top: 60px;
+    border-radius: 10px;
+    font-family: 'Dancing Script', cursive;
+}
+
+/* Side Container */
+.side-container {
+    max-width: 480px;
+    margin: 10px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    position: sticky;
+    left: 1360px;
+    border: 1px solid #ddd;
+    overflow: scroll;
+    top: 120px;
+    height: 310px;
+}
+
+.side-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Friend Request */
+.friend-request {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+    width: 440px;
+    background-color: var(--background1-color);
+}
+
+.friend-request:hover {
+    background-color: var(--background2-color);
+    transform: translateY(-2px);
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.friend-request img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.friend-info h3 {
+    font-size: 18px;
+    color: #333;
+    background-color: var(--background3-color);
+}
+
+.friend-info p {
+    margin-top: 5px;
+    color: #777;
+    background-color: var(--background3-color);
+}
+
+.friend-request-action button {
+    margin-left: auto;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.accept-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.accept-btn:hover {
+    background-color: #45a049;
+}
+
+.decline-btn {
+    background-color: #e74c3c;
+    color: white;
+    margin-left: 10px;
+}
+
+.decline-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Main Content */
+main {
+    max-width: 700px;
+    margin: 30px auto;
+    position: relative;
+    top: -740px;
+    right: -20px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    margin-bottom: -200px;
+}
+
+/* Create Post */
+.create-post h1 {
+    text-align: center;
+    font-size: 30px;
+    bottom: 50px;
+    position: relative;
+}
+
+.create-post {
+    background: var(--background1-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    margin-bottom: 30px;
+    padding-top: 100px;
+    text-align: center;
+    width: 540px;
+    position: sticky;
+    top: 70px;
+    left: 20px;
+    margin-top: -410px;
+}
+
+.create-post form input,
+.create-post form textarea,
+.create-post form button {
+    width: 90%;
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ebdbce;
+    font-size: 14px;
+    margin-left: 25px;
+    text-align: center;
+}
+
+.create-post form button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.create-post form button:hover {
+    background-color: #3498db;
+}
+
+/* Profile Picture */
+.profile-pic {
+    width: 50px;
+    margin-top: 15px;
+    border-radius: 50%;
+    height: 50px;
+    position: relative;
+    top: 10px;
+    border: 3px solid #4a90e2;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.profile-pic1 {
+    width: 30px;
+    border-radius: 50%;
+    height: 30px;
+    position: relative;
+    top: 40px;
+    border: 3px solid #4a90e2;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+/* Post */
+.post {
+    background: var(--background1-color);
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.post-content h3 {
+    color: #3498db;
+    font-size: 18px;
+    position: relative;
+    left: 65px;
+    top: -30px;
+    text-decoration: underline 1px solid #000000;
+}
+
+.post-content p {
+    margin: 10px 0;
+    color: #555;
+}
+
+.post-content img {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 10px;
+    height: 600px;
+}
+
+/* Like Button */
+.like-button {
+    margin-top: 10px;
+    color: #e74c3c;
+    font-size: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.like-button.liked {
+    color: #c0392b;
+}
+
+.like-button i {
+    margin-right: 5px;
+}
+
+/* Comments */
+.comments {
+    margin: 0;
+}
+
+.comments p {
+    font-size: 14px;
+    color: #555;
+    position: relative;
+    left: 40px;
+}
+
+.comments .comment-user {
+    font-weight: bold;
+    color: #3498db;
+}
+
+.comments form {
+    display: flex;
+    margin-top: 10px;
+}
+
+.comments input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+}
+
+.comments button {
+    padding: 8px 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comments button:hover {
+    background-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    
+}
+
+/* Conversations Section */
+.conversations-container {
+    position: sticky;
+    left: 1360px;
+    bottom: 50px;
+    width: 100%;
+    max-width: 490px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    height: 400px;
+    overflow: scroll;
+}
+
+
+/* Heading */
+.conversations-container h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-family: 'Dancing Script', cursive;
+}
+
+/* Conversations List */
+.conversations {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Individual Conversation Item */
+.conversation-item {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: var(--background1-color);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover Effect for Items */
+.conversation-item:hover {
+    background-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+/* Link Styling */
+.conversation-item a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.conversation-item a:hover {
+    color: #ffffff;
+}
+
+/* Username Styling */
+.username {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+.username i {
+margin-right: 5px;
+color: #4a90e2;
+}
+
+.username p {
+margin: 5px 0 0 25px;
+font-size: 14px;
+color: #555;
+}
+.conversations-header {
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 10px;
+background-color: #3498db;
+color: white;
+border-radius: 10px 10px 0 0;
+position: sticky;
+top: 5px;
+margin-bottom: 30px;
+}
+.username1 {
+font-family: 'Dancing Script', cursive;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.username1 i {
+margin-right: 5px;
+color: #e67e22; /* Distinct color for sender icons */
+}
+
+.username1 p {
+margin: 5px 0 0 25px;
+font-size: 14px;
+color: #555;
+}
+
+.conversations-header h1 {
+font-size: 20px;
+margin: 0;
+display: flex;
+align-items: center;
+font-family: 'Dancing Script', cursive;
+}
+
+.conversations-header h1 i {
+margin-right: 10px;
+font-size: 24px;
+}
+.welcome-message {
+font-family: 'Dancing Script', cursive;
+font-size: 20px;
+font-weight: bold;
+color: #2c3e50;
+position: relative;
+left: 260px;
+}

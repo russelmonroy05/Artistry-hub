@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages and Conversations</title>
+    <link rel="stylesheet" href="{% static 'messages.css' %}">
+    <style>
+     
+    </style>
+  </head>
+
+  <body>
+    <h1>Messages and Conversations</h1>
+    <div class="chat-container">
+      {% for user_id, messages in conversations.items %}
+        {% with user=messages.0.user %}
+          <h2>Conversation with {{ user.username }}</h2>
+        {% endwith %}
+        {% for message in messages %}
+          <div class="message {% if message.user_id == request.session.user_id %}me{% else %}sender{% endif %}">
+            <strong>{{ message.user.username }}</strong>{{ message.message }}
+            {% if message.user.id == request.session.user_id %}
+          </div>
+        {% endfor %}
+        
+        <div class="input-container">
+          <input type="text" placeholder="Type a message..." />
+          <button>Send</button>
+        </div>
+        <hr />
+      {% endfor %}
+
+
+    </div>
+  </body>
+</html>

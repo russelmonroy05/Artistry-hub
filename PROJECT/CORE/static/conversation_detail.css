@@ -1,0 +1,169 @@
+ /* General body styling */
+ body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #6e7f8c, #b7c6d5); /* Gradient background */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-size: cover; /* Make the background cover the entire viewport */
+}
+
+/* Styling for the chat container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 500px;
+  height: 500px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensures no content overflows */
+  background-color: rgba(255, 255, 255, 0.9); /* Slight transparency for a soft effect */
+}
+
+/* Styling for the header section */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Style for the profile picture in header */
+.header .profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Style for the user's name in header */
+.header .user-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Styling for the messages area (scrollable) */
+.messages-area {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 10px;
+  margin-bottom: 10px;
+  max-height: calc(100% - 60px); /* Ensures the messages don't overflow */
+}
+
+/* Style for individual message container */
+.message-container {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+/* Align user messages to the right */
+.message-container.user {
+  justify-content: flex-end;
+}
+
+/* Align other messages to the left */
+.message-container.other {
+  justify-content: flex-start;
+}
+
+/* Style for the message bubble */
+.message {
+  max-width: 70%;
+  padding: 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative;
+}
+
+/* User-specific message bubble style */
+.message.user {
+  background-color: #007bff;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+
+/* Other user's message bubble style */
+.message.other {
+  background-color: #ececec;
+  color: #333;
+  border-bottom-left-radius: 0;
+}
+
+/* Styling for message text */
+.message p {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Style for the timestamp */
+.message small {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: #888;
+  text-align: right;
+}
+
+/* Style for chat form */
+.chat-form {
+  display: flex;
+  padding: 10px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.chat-form textarea {
+  flex-grow: 1;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  resize: none;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chat-form button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.chat-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Optional styling for the form placeholder */
+.chat-form textarea::placeholder {
+  color: #888;
+}
+
+/* Profile Pic Styling */
+.profile-pic img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 5px;
+}

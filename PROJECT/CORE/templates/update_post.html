@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'update_post.css' %}">
+
+<div class="update-post-wrapper">
+  <div class="update-post-card">
+    <h1 class="update-post-title">📝 Update Your Post</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="update-post-form">
+      {% csrf_token %}
+      {{ post_form.as_p }}
+
+      <!-- Existing Images -->
+      <div class="form-section">
+        <h3 class="section-heading">📸 Existing Images</h3>
+        <div class="images-container">
+          {% for image in post.postimage_set.all %}
+            <div class="image-box">
+              <img src="{{ image.image.url }}" alt="Post Image" class="image-preview">
+              <label class="image-checkbox">
+                <input type="checkbox" name="delete_images" value="{{ image.id }}"> Delete
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Upload New Images -->
+      <div class="form-section">
+        <h3 class="section-heading">📤 Upload New Images</h3>
+        <input type="file" name="post_images" multiple class="file-input">
+      </div>
+
+      <!-- Buttons -->
+      <div class="form-buttons">
+        <button type="submit" class="btn primary">💾 Update Post</button>
+        <a href="{% url 'dashboard' %}" class="btn secondary">❌ Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+
+<style>
+
+
+
+
+</style>

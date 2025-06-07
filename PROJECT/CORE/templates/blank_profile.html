@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Profile</title>
+    <link rel="stylesheet" href="{% static 'blank_profile.css' %}">
+</head>
+
+<body>
+    <header>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2560px-Instagram_logo_2022.svg.png"
+            alt="Instagram Logo">
+        <button onclick="window.location.href = '{% url 'dashboard' %}';">NewsFeed</button>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-picture">?</div>
+        <div class="profile-info">
+            <h2>{{ user.f_name|default:"First Name" }} {{ user.l_name|default:"Last Name" }}</h2>
+            <p>{{ user.profile.bio|default:"No bio added yet." }}</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="#">About</a> | <a href="#">Help</a> | <a href="#">API</a> | <a href="#">Jobs</a>
+    </div>
+</body>
+
+</html>

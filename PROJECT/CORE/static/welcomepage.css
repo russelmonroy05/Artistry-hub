@@ -1,0 +1,140 @@
+      /* General Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        color: #343a40;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 200vh;
+
+      }
+      body::-webkit-scrollbar{
+        display: none;
+      }
+      /* Header Styling */
+      header {
+        width: 100%;
+        background: #343a40;
+        color: #ffffff;
+        padding: 1rem 0;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+
+      nav {
+        margin-top: 0.5rem;
+      }
+
+      nav a {
+        color: #ffffff;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      nav a:hover {
+        color: #17a2b8;
+      }
+
+      /* Container Styling */
+      .welcome-container {
+        text-align: center;
+        padding: 2rem;
+        background: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        width: 90%;
+        max-width: 800px;
+        margin: 20px 0;
+      }
+
+      .welcome-container h1 {
+        font-size: 2.5rem;
+        color: #6c757d;
+      }
+
+      .welcome-container p {
+        font-size: 1.2rem;
+        margin: 1rem 0;
+        color: #495057;
+      }
+
+      .btn-group {
+        margin-top: 2rem;
+      }
+
+      .btn {
+        text-decoration: none;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        color: #fff;
+        background: #17a2b8;
+        border-radius: 5px;
+        margin: 0 0.5rem;
+        transition: background 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #138496;
+      }
+
+      /* Hidden Section */
+      .hidden-section {
+        display: none;
+        background: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        width: 90%;
+        max-width: 2000px;
+        padding: 1.5rem;
+        margin-top: 20px;
+        text-align: center;
+        height: 300px;
+      }
+
+      .hidden-section h2 {
+        color: #343a40;
+        font-size: 2rem;
+      }
+
+      .hidden-section p {
+        color: #495057;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      /* Footer Styling */
+      footer {
+        width: 100%;
+        background: #343a40;
+        color: #ffffff;
+        text-align: center;
+        padding: 1rem 0;
+        margin-top: auto;
+        position: sticky;
+        bottom: 0;
+      }
+
+      footer p {
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+
+      footer a {
+        color: #17a2b8;
+        text-decoration: none;
+        margin: 0 5px;
+      }
+
+      footer a:hover {
+        color: #138496;
+      }

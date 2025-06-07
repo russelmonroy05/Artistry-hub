@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <!-- create_conversation.html -->
+
+    <h1>Create Conversation</h1>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="recipient_id" value="{{ recipient_id }}" />
+      <button type="submit">Create Conversation</button>
+    </form>
+  </body>
+</html>

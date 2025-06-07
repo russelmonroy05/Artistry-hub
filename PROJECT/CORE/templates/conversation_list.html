@@ -1,0 +1,32 @@
+<!-- PROJECT/CORE/templates/conversation_list.html -->
+ {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'conversation_list.css' %}">
+    
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <h1>Your Conversations</h1>
+    <ul class="conversations">
+      {% for conversation in conversations %}
+      <li>
+        <a href="{% url 'conversation_detail' conversation.id %}">
+          {% if conversation.sender.id == request.session.user_id %}
+          {{conversa}}
+            {{ conversation.recipient.f_name }} {{ conversation.recipient.l_name }}
+          {% else %}
+            {{ conversation.sender.f_name }} {{ conversation.sender.l_name }}
+          {% endif %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

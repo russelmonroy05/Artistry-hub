@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload with Preview</title>
+    <link rel="stylesheet" href="{% static 'edit_cover.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Upload Your Image</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <div class="image-preview" id="imagePreview">
+                <img id="previewImg" src="" alt="Image Preview" style="display: none;">
+                <span id="imageName" style="display: none;"></span>
+            </div>
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <script>
+        const imageInput = document.querySelector('input[type="file"]');
+        const previewImg = document.getElementById('previewImg');
+        const imageName = document.getElementById('imageName');
+
+        imageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                };
+
+                reader.readAsDataURL(file);
+
+                imageName.textContent = file.name;
+                imageName.style.display = 'block';
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+                imageName.textContent = '';
+                imageName.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

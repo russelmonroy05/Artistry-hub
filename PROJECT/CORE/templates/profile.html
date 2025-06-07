@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Profile</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'profile.css' %}">
+  <style>
+    .cover {
+      width: 80%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      z-index: 0;
+      box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+      left: 100px;
+      position: relative;
+      
+    }
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <img
+      src="{% static 'daw.jpg' %}"
+      alt="Instagram Logo" />
+    <div><h2>Profile</h2></div>
+    <button onclick="window.location.href = '{% url 'dashboard' %}';">NewsFeed</button>
+  </header>
+ 
+
+  <div class="profile-container">
+    {% if cover_photo %}
+        <img src="{{ cover_photo.coverphoto.url }}" alt="Cover Photo" class="cover"/>
+    {% else %}
+        <img src="{% static 'default_cover.jpg' %}" alt="No Cover Photo" class="cover"/>
+    {% endif %}
+    
+    <div class="profile-details">
+      <button onclick="window.location.href = '{% url 'edit_cover' %}';" class="edit-profile-btn">
+          <i class="fas fa-camera"></i>
+        </button>
+      
+        
+
+      
+      <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" />
+      <div class="profile-info">
+        <p><strong>{{ user.f_name }} {{ user.l_name }}</strong></p>
+        <p class="bio">Bio:{{ user.profile.bio }}</p>
+        <p>Followers: {{friend_requests.count }}</p>
+        <button onclick="window.location.href = '{% url 'edit_profile' %}';" class="edit-profile-btn">
+          <i class="fas fa-camera"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="friend-request-list">
+      <h1>Followers</h1>
+      {% for friend_request in friend_requests %}
+      <div class="friend-request">
+        <a href="{% url 'view_profile' friend_request.user.id %}">
+          <img src="{{ friend_request.user.profile.profile_picture.url }}" alt="Profile Picture">
+        </a>
+        <div>
+          <h3>@_{{ friend_request.user.f_name }} {{ friend_request.user.l_name }}</h3>
+          <p>Recently Followed You!</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="posts-container">
+    {% for post in posts %}
+    <div class="post">
+      {% for image in post_images %}
+          {% if image.post == post %}
+            <img src="{{ image.image.url }}" alt="Post Image" />
+          {% endif %}
+      {% endfor %}
+      <div class="post-details">
+        <p>{{ post.title }}</p>
+        <p>{{ post.content }}</p>
+        <p class="created-at">Created at: {{ post.created_at }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="footer">
+    <a href="#">About</a> | <a href="#">Help</a> | <a href="#">Press</a> | <a href="#">API</a> | <a href="#">Jobs</a>
+  </div>
+</body>
+
+</html>
