@@ -1,0 +1,1 @@
+web: gunicorn teacher_eval_project.wsgi:application --log-file -

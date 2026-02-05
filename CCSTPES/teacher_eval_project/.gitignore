@@ -1,0 +1,45 @@
+# Environment
+.env
+.env.local
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Media and Static
+media/
+staticfiles/
+.webassets-cache
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+
+# Backup
+*.bak
+backup.json
+db_backup.sqlite3
