@@ -1,0 +1,46 @@
+<div class="container py-5">
+    <h2>Teachers in {{ student_department.name }} Department</h2>
+    <p class="text-muted">You can only evaluate teachers from your department ({{ student_department.code }})</p>
+
+    {% if teachers %}
+    <div class="row">
+        {% for teacher in teachers %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{ teacher.user.get_full_name }}</h5>
+                    <p><strong>Employee ID:</strong> {{ teacher.employee_id }}</p>
+                    <p><strong>Department:</strong> {{ teacher.department.name }}</p>
+                    <p><strong>Qualification:</strong> {{ teacher.qualification }}</p>
+                    <p><strong>Experience:</strong> {{ teacher.experience_years }} years</p>
+                    <p><strong>Average Rating:</strong> {{ teacher.get_average_rating }}/5</p>
+
+                    {% if teacher.dept_subjects %}
+                    <div style="margin-top:10px;">
+                        <p><strong>Subjects (in {{ student_department.code }}):</strong></p>
+                        <ul style="padding-left: 18px;">
+                            {% for subject in teacher.dept_subjects %}
+                            <li>
+                                <strong>{{ subject.name }}</strong> ({{ subject.code }})<br>
+                                <small style="color:#6c757d;">{{ subject.get_time_range }} · {{
+                                    subject.days|default:'TBA' }} · Duration: {{ subject.get_duration }} hrs</small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% else %}
+                    <p class="text-muted" style="margin-top:10px;">No subjects for this teacher in your department.</p>
+                    {% endif %}
+
+                    <a href="{% url 'evaluate_teacher' teacher.id %}" class="btn btn-primary">Evaluate</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        No teachers available in your department yet.
+    </div>
+    {% endif %}
+</div>

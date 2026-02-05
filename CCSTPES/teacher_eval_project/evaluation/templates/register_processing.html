@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Your Email - Registration{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h3>Verify Your Email</h3>
+    <p class="text-muted">Check your inbox for a verification email and click the link.</p>
+</div>
+
+<!-- Registration Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Verify Your Email</h5>
+            </div>
+            <div class="modal-body text-center">
+                <!-- Waiting for verification -->
+                <div id="waitingArea">
+                    <p>An email verification link has been sent to:</p>
+                    <div class="d-flex align-items-center justify-content-center gap-2 mt-3">
+                        <p class="fw-bold mb-0">{{ email }}</p>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="verifyEmailBtn"
+                            onclick="openVerificationLink()">
+                            <i class="fas fa-check"></i> Verify
+                        </button>
+                    </div>
+                    <div class="spinner-border text-primary mt-4" role="status" id="spinner">
+                        <span class="visually-hidden">Waiting...</span>
+                    </div>
+                    <p class="mt-3 text-muted"><small>Waiting for verification...</small></p>
+                </div>
+
+                <!-- Verified result -->
+                <div id="verifiedArea" style="display:none;">
+                    <p id="resultMessage" class="fw-bold text-success"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="verifyBtn" onclick="openVerificationLink()">
+                    <i class="fas fa-envelope"></i> Open Email
+                </button>
+                <button type="button" class="btn btn-secondary" id="closeBtn" style="display:none;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('registerModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        modal.show();
+
+        var email = '{{ email }}';
+        var verificationUrl = '{{ verification_url }}';
+        var pollingInterval = null;
+        var verificationWindow = null;
+
+        // Open verification link in a new window
+        window.openVerificationLink = function () {
+            if (verificationUrl) {
+                verificationWindow = window.open(verificationUrl, 'verifyWindow', 'width=600,height=500');
+            }
+        };
+
+        // Start polling for verification
+        function startPolling() {
+            if (pollingInterval) return; // Already polling
+
+            pollingInterval = setInterval(function () {
+                fetch('/ajax/check-verification/?email=' + encodeURIComponent(email))
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        if (!data || !data.status) return;
+
+                        if (data.status === 'not_verified') {
+                            // Still waiting, do nothing
+                            return;
+                        }
+
+                        // Stop polling
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+
+                        // Hide spinner and show result
+                        document.getElementById('waitingArea').style.display = 'none';
+                        document.getElementById('verifiedArea').style.display = 'block';
+                        document.getElementById('resultMessage').textContent = data.message || 'Email verified successfully!';
+
+                        // Hide verify button, show close button
+                        document.getElementById('verifyBtn').style.display = 'none';
+                        document.getElementById('closeBtn').style.display = 'inline-block';
+
+                        // Close verification window if still open
+                        if (verificationWindow && !verificationWindow.closed) {
+                            verificationWindow.close();
+                        }
+
+                        // Auto-close modal and return to register page after 2 seconds
+                        setTimeout(function () {
+                            modal.hide();
+                            // Redirect back to student register with success message
+                            window.location.href = '{% url "student_register" %}?verified=success';
+                        }, 2000);
+                    })
+                    .catch(function (err) {
+                        console.error('Poll error:', err);
+                    });
+            }, 2000); // Poll every 2 seconds
+        }
+
+        // Start polling immediately
+        startPolling();
+
+        // Close button closes the modal
+        document.getElementById('closeBtn').addEventListener('click', function () {
+            modal.hide();
+            window.location.href = '{% url "student_register" %}?verified=success';
+        });
+    });
+</script>
+
+{% endblock %}

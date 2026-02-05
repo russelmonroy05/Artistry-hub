@@ -1,0 +1,730 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .evaluation-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .evaluation-period-badge {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .evaluation-period-badge h6 {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .evaluation-period-badge p {
+        margin: 0.25rem 0 0 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .teacher-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .teacher-header h2 {
+        margin: 0;
+        font-size: 1.75rem;
+    }
+
+    .evaluation-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .section-header {
+        background: #f8f9fa;
+        padding: 1rem 1.5rem;
+        border-left: 4px solid #667eea;
+        margin-bottom: 1.5rem;
+        border-radius: 4px;
+    }
+
+    .section-header h4 {
+        margin: 0;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .rating-scale {
+        background: #e3f2fd;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        border-left: 4px solid #2196f3;
+    }
+
+    .rating-scale p {
+        margin: 0.25rem 0;
+        font-size: 0.9rem;
+    }
+
+    .criterion-item {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .criterion-item:hover {
+        background: #f5f5f5;
+        border-color: #667eea;
+    }
+
+    .criterion-text {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: start;
+    }
+
+    .criterion-text::before {
+        content: "•";
+        color: #667eea;
+        font-weight: bold;
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        line-height: 1;
+    }
+
+    .rating-options {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .rating-option {
+        flex: 1;
+        min-width: 60px;
+    }
+
+    .rating-option input[type="radio"] {
+        display: none;
+    }
+
+    .rating-option label {
+        display: block;
+        padding: 0.5rem;
+        text-align: center;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        background: white;
+    }
+
+    .rating-option input[type="radio"]:checked + label {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+        transform: scale(1.05);
+    }
+
+    .rating-option label:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+
+    .problems-section {
+        margin-top: 2rem;
+    }
+
+    .problem-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: #fff3e0;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #ff9800;
+    }
+
+    .problem-text {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .problem-ratings {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .problem-rating {
+        position: relative;
+    }
+
+    .problem-rating input[type="radio"] {
+        display: none;
+    }
+
+    .problem-rating label {
+        padding: 0.5rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: white;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .problem-rating input[type="radio"]:checked + label {
+        background: #ff9800;
+        color: white;
+        border-color: #ff9800;
+    }
+
+    .suggestions-textarea {
+        width: 100%;
+        min-height: 120px;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-family: inherit;
+        resize: vertical;
+    }
+
+    .suggestions-textarea:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .submit-section {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-submit {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background: #5a6268;
+        color: white;
+    }
+
+    .alert-existing {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="evaluation-container">
+    
+    <!-- Evaluation Period Badge -->
+    {% if evaluation_is_open %}
+    <div class="evaluation-period-badge">
+        <h6><i class="fas fa-calendar-check"></i> Current Evaluation Period</h6>
+        <p>{{ current_academic_year.name }} - {{ current_semester.name }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Teacher Header -->
+    <div class="teacher-header">
+        <div class="d-flex align-items-center">
+            {% if teacher.profile_picture %}
+                <img src="{{ teacher.profile_picture.url }}" 
+                     alt="{{ teacher.user.get_full_name }}"
+                     style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid white; margin-right: 1.5rem;">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ teacher.user.get_full_name|urlencode }}&background=fff&color=667eea&size=80"
+                     style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid white; margin-right: 1.5rem;">
+            {% endif %}
+            
+            <div>
+                <h2>{{ teacher.user.get_full_name }}</h2>
+                <p class="mb-0" style="opacity: 0.9;">
+                    <i class="fas fa-building"></i> {{ teacher.department.name }} | 
+                    <i class="fas fa-graduation-cap"></i> {{ teacher.qualification }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing Evaluations Alert (for this semester) -->
+    {% if existing_evaluations %}
+    <div class="alert-existing">
+        <i class="fas fa-info-circle"></i> 
+        <strong>Note:</strong> You have already evaluated this teacher for the following subjects this semester:
+        {% for eval in existing_evaluations %}
+            <span class="badge bg-warning text-dark">{{ eval.subject.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Evaluation Form -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Subject Selection -->
+        <div class="evaluation-card">
+            <div class="section-header">
+                <h4><i class="fas fa-book"></i> Select Subject</h4>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Subject Being Evaluated *</label>
+                {{ form.subject }}
+                <small class="text-muted d-block mt-2">
+                    <i class="fas fa-info-circle"></i> Select the subject for which you are evaluating this teacher for {{ current_semester.name }}
+                </small>
+            </div>
+        </div>
+
+        <!-- Rating Scale Guide -->
+        <div class="rating-scale">
+            <h5 class="mb-2"><i class="fas fa-star"></i> Rating Scale:</h5>
+            <p><strong>5</strong> - Outstanding</p>
+            <p><strong>4</strong> - Very Satisfactory</p>
+            <p><strong>3</strong> - Satisfactory</p>
+            <p><strong>2</strong> - Moderately Satisfactory</p>
+            <p><strong>1</strong> - Needs Improvement</p>
+        </div>
+
+        <!-- PART I: PRESENTATION OF LESSON -->
+        <div class="evaluation-card">
+            <div class="section-header">
+                <h4>PART I: PRESENTATION OF LESSON</h4>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Communicates clearly the objectives of the lesson</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="presentation_objectives" value="{{ i }}" id="pres_obj_{{ i }}" required>
+                        <label for="pres_obj_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Uses motivational techniques that elicit student interest</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="presentation_motivation" value="{{ i }}" id="pres_mot_{{ i }}" required>
+                        <label for="pres_mot_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Relates previous lesson to the present</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="presentation_relation" value="{{ i }}" id="pres_rel_{{ i }}" required>
+                        <label for="pres_rel_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Checks assignments (if any)</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="presentation_assignments" value="{{ i }}" id="pres_asn_{{ i }}" required>
+                        <label for="pres_asn_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PART II: DEVELOPMENT OF THE LESSON -->
+        <div class="evaluation-card">
+            <div class="section-header">
+                <h4>PART II: DEVELOPMENT OF THE LESSON - Expected Teacher Behavior</h4>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Anticipates difficulties of the students</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_anticipates" value="{{ i }}" id="dev_ant_{{ i }}" required>
+                        <label for="dev_ant_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Demonstrates mastery of the lesson (e.g., teaches without open notes & textbooks)</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_mastery" value="{{ i }}" id="dev_mas_{{ i }}" required>
+                        <label for="dev_mas_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Develops the lesson logically</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_logical" value="{{ i }}" id="dev_log_{{ i }}" required>
+                        <label for="dev_log_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Provides opportunities for free expression of class</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_expression" value="{{ i }}" id="dev_exp_{{ i }}" required>
+                        <label for="dev_exp_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Provides opportunities for students' participation in decision making</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_participation" value="{{ i }}" id="dev_par_{{ i }}" required>
+                        <label for="dev_par_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Asks questions of various levels</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_questions" value="{{ i }}" id="dev_que_{{ i }}" required>
+                        <label for="dev_que_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Integrates values in the lesson</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_values" value="{{ i }}" id="dev_val_{{ i }}" required>
+                        <label for="dev_val_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Provides appropriate reinforcement to student behavior</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_reinforcement" value="{{ i }}" id="dev_rei_{{ i }}" required>
+                        <label for="dev_rei_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Keeps majority of the students involved in the learning tasks most of the time</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_involvement" value="{{ i }}" id="dev_inv_{{ i }}" required>
+                        <label for="dev_inv_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Speaks in well-modulated voice</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_voice" value="{{ i }}" id="dev_voi_{{ i }}" required>
+                        <label for="dev_voi_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Observes correct grammar both in speaking and in writing</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_grammar" value="{{ i }}" id="dev_gra_{{ i }}" required>
+                        <label for="dev_gra_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Monitors student progress periodically through appropriate assessment tools & techniques</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_monitoring" value="{{ i }}" id="dev_mon_{{ i }}" required>
+                        <label for="dev_mon_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Utilizes instructional time productively</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="dev_time" value="{{ i }}" id="dev_tim_{{ i }}" required>
+                        <label for="dev_tim_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PART III: EXPECTED STUDENT BEHAVIOR -->
+        <div class="evaluation-card">
+            <div class="section-header">
+                <h4>PART III: EXPECTED STUDENT BEHAVIOR</h4>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Answer in own words at designed cognitive level</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="student_answers" value="{{ i }}" id="stu_ans_{{ i }}" required>
+                        <label for="stu_ans_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Ask questions relevant to the lesson</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="student_questions" value="{{ i }}" id="stu_que_{{ i }}" required>
+                        <label for="stu_que_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Are actively engaged in learning tasks</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="student_engagement" value="{{ i }}" id="stu_eng_{{ i }}" required>
+                        <label for="stu_eng_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Work within the time frame allotted for the activity</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="student_timeframe" value="{{ i }}" id="stu_tim_{{ i }}" required>
+                        <label for="stu_tim_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Abide by the decision of the majority</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="student_majority" value="{{ i }}" id="stu_maj_{{ i }}" required>
+                        <label for="stu_maj_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PART IV: WRAP-UP -->
+        <div class="evaluation-card">
+            <div class="section-header">
+                <h4>PART IV: WRAP-UP</h4>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Teacher provides opportunities for students to demonstrate learnings gained</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="wrapup_demonstrate" value="{{ i }}" id="wrap_dem_{{ i }}" required>
+                        <label for="wrap_dem_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="criterion-item">
+                <div class="criterion-text">Students synthesize learning through appropriate integration activities</div>
+                <div class="rating-options">
+                    {% for i in "54321" %}
+                    <div class="rating-option">
+                        <input type="radio" name="wrapup_synthesize" value="{{ i }}" id="wrap_syn_{{ i }}" required>
+                        <label for="wrap_syn_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PART V: PROBLEMS MET -->
+        <div class="evaluation-card problems-section">
+            <div class="section-header">
+                <h4>PART V: PROBLEMS MET</h4>
+                <small class="text-muted">Rate: 3 - Very Serious, 2 - Serious, 1 - Not Serious</small>
+            </div>
+
+            <div class="problem-item">
+                <div class="problem-text">Late in coming to class</div>
+                <div class="problem-ratings">
+                    {% for i in "321" %}
+                    <div class="problem-rating">
+                        <input type="radio" name="problem_late" value="{{ i }}" id="prob_late_{{ i }}" required>
+                        <label for="prob_late_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="problem-item">
+                <div class="problem-text">Absenteeism</div>
+                <div class="problem-ratings">
+                    {% for i in "321" %}
+                    <div class="problem-rating">
+                        <input type="radio" name="problem_absent" value="{{ i }}" id="prob_abs_{{ i }}" required>
+                        <label for="prob_abs_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="problem-item">
+                <div class="problem-text">Very long video presentation (more than 30 minutes)</div>
+                <div class="problem-ratings">
+                    {% for i in "321" %}
+                    <div class="problem-rating">
+                        <input type="radio" name="problem_video" value="{{ i }}" id="prob_vid_{{ i }}" required>
+                        <label for="prob_vid_{{ i }}">{{ i }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- PART VI: SUGGESTIONS -->
+        <div class="evaluation-card">
+            <div class="section-header">
+                <h4>PART VI: SUGGESTED MEASURES TO SOLVE THE PROBLEMS</h4>
+            </div>
+            <textarea 
+                name="suggestions" 
+                class="suggestions-textarea" 
+                placeholder="Please provide your suggestions on how to address the problems you identified above..."
+                required></textarea>
+        </div>
+
+        <!-- Form Errors -->
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Please correct the following errors:</strong>
+            {{ form.errors }}
+        </div>
+        {% endif %}
+
+        <!-- Submit Buttons -->
+        <div class="submit-section">
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-paper-plane"></i> Submit Evaluation
+            </button>
+            <a href="{% url 'student_dashboard' %}" class="btn-cancel">
+                <i class="fas fa-arrow-left"></i> Cancel
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

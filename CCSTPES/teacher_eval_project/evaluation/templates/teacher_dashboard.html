@@ -1,0 +1,829 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %}Teacher Dashboard - Teacher Evaluation System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/teacher_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="teacher-screen">
+    <!-- Sidebar -->
+    <aside class="teacher-sidebar">
+        <div class="teacher-sidebar-card">
+            <!-- Profile Section -->
+            <div class="teacher-profile-section">
+                {% if teacher.profile_picture %}
+                    <img src="{{ teacher.profile_picture.url }}" alt="Profile" class="teacher-profile-pic">
+                {% else %}
+                    <div class="teacher-profile-placeholder">
+                        {{ user.first_name|first }}{{ user.last_name|first }}
+                    </div>
+                {% endif %}
+                
+                <div class="teacher-profile-name">{{ user.get_full_name }}</div>
+                <div class="teacher-profile-id">{{ teacher.employee_id }}</div>
+                <div class="teacher-rating-badge">
+                    <i class="fas fa-star"></i> {{ average_rating }}/5
+                </div>
+            </div>
+
+            <!-- Sidebar Links -->
+            <div class="teacher-sidebar-links">
+                <div class="teacher-sidebar-item active">
+                    <a href="#" data-section="overview">
+                        <i class="fas fa-tachometer-alt"></i> Overview
+                    </a>
+                </div>
+                <div class="teacher-sidebar-item">
+                    <a href="#" data-section="evaluations">
+                        <i class="fas fa-star"></i> My Evaluations
+                    </a>
+                </div>
+                <div class="teacher-sidebar-item">
+                    <a href="#" data-section="subjects">
+                        <i class="fas fa-book"></i> My Subjects
+                    </a>
+                </div>
+                <div class="teacher-sidebar-item">
+                    <a href="#" data-section="performance">
+                        <i class="fas fa-chart-line"></i> Performance
+                    </a>
+                </div>
+                <div class="teacher-sidebar-item logout">
+                    <a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="teacher-main-content">
+        
+        <!-- Overview Section -->
+        <section id="overview" class="teacher-section active-section">
+            <!-- Header -->
+            <div class="card mb-5 teacher-header-card">
+                <div class="card-body">
+                    <h2>
+                        <i class="fas fa-chalkboard-teacher text-danger"></i>
+                        <strong> Teacher Dashboard</strong>
+                    </h2>
+                    <small class="text-muted teacher-admin-label">
+                        <strong>{{ teacher.department.name }} | {{ teacher.qualification }}</strong>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="teacher-stats-layout mb-0 mt-4" style="position: relative; left: -25px;">
+                <div class="teacher-stat-card">
+                    <i class="fas fa-star"></i>
+                    <h3>{{ total_evaluations }}</h3>
+                    <p>Total Evaluations</p>
+                </div>
+                <div class="teacher-stat-card">
+                    <i class="fas fa-book"></i>
+                    <h3>{{ teacher.subjects.count }}</h3>
+                    <p>Teaching Subjects</p>
+                </div>
+                <div class="teacher-stat-card">
+                    <i class="fas fa-award"></i>
+                    <h3>{{ average_rating }}/5</h3>
+                    <p>Average Rating</p>
+                </div>
+                <div class="teacher-stat-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>{{ teacher.experience_years }}</h3>
+                    <p>Years Experience</p>
+                </div>
+            </div>
+
+            <!-- Circular Progress Bars - NEW! -->
+            <div class="teacher-chart-card" style="position: relative; left: -40px;top: 90PX; max-height: 250px;max-width: 1700px;">
+                
+                <div class="row text-center">
+                    <div class="col-3">
+                        <canvas id="presentationCircle" width="100" height="100"></canvas>
+                        <p class="mt-2 mb-0 small"><strong>Presentation</strong></p>
+                        <small class="text-muted">{{ category_data.presentation }}/5</small>
+                    </div>
+                    <div class="col-3">
+                        <canvas id="developmentCircle" width="100" height="100"></canvas>
+                        <p class="mt-2 mb-0 small"><strong>Development</strong></p>
+                        <small class="text-muted">{{ category_data.development }}/5</small>
+                    </div>
+                    <div class="col-3">
+                        <canvas id="studentCircle" width="100" height="100"></canvas>
+                        <p class="mt-2 mb-0 small"><strong>Student</strong></p>
+                        <small class="text-muted">{{ category_data.student_behavior }}/5</small>
+                    </div>
+                    <div class="col-3">
+                        <canvas id="wrapupCircle" width="100" height="100"></canvas>
+                        <p class="mt-2 mb-0 small"><strong>Wrap-up</strong></p>
+                        <small class="text-muted">{{ category_data.wrapup }}/5</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Line Chart -->
+            <div class="teacher-chart-card" style="position: relative; left: 480px; top: -590px; max-width: 57%;">
+                <h5 class="mb-3"><i class="fas fa-chart-line"></i> Rating Trend</h5>
+                <canvas id="performanceChart" height="180"></canvas>
+            </div>
+
+            <!-- Recent Evaluations Table -->
+            <!-- <div class="teacher-content-card" style="position: relative; top: -510px; margin-left: 30px; max-width: 95%;">
+                <div class="card-header">
+                    <h4><i class="fas fa-comments"></i> Recent Evaluations</h4>
+                </div>
+                <div class="card-body">
+                    {% if evaluations %}
+                    <div class="table-responsive">
+                        <table class="teacher-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Rating</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for eval in evaluations|slice:":5" %}
+                                <tr>
+                                    <td>{{ eval.subject.code }} - {{ eval.subject.name }}</td>
+                                    <td>
+                                        <span class="rating-stars">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= eval.get_average_rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                        <span class="text-muted">({{ eval.get_average_rating }}/5)</span>
+                                    </td>
+                                    <td>{{ eval.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'view_evaluation' eval.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="teacher-empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No evaluations received yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div> -->
+        </section>
+
+        <!-- All Evaluations Section -->
+        <section id="evaluations" class="teacher-section">
+            <div class="card mb-4 teacher-header-card">
+                <div class="card-body">
+                    <h2>
+                        <i class="fas fa-star text-danger"></i>
+                        <strong> All My Evaluations</strong>
+                    </h2>
+                    <small class="text-muted teacher-admin-label">
+                        <strong>Complete Evaluation History</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="teacher-content-card" style="margin-left: 30px; max-width: 95%;">
+                <div class="card-header">
+                    <h4><i class="fas fa-list"></i> Evaluation Records</h4>
+                </div>
+                <div class="card-body">
+                    {% if evaluations %}
+                    <div class="table-responsive">
+                        <table class="teacher-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject</th>
+                                    <th>Presentation</th>
+                                    <th>Development</th>
+                                    <th>Overall</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for eval in evaluations %}
+                                <tr>
+                                    <td>{{ eval.created_at|date:"M d, Y" }}</td>
+                           
+                                    <td>{{ eval.subject.code }}</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ eval.get_presentation_average }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ eval.get_development_average }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-success">{{ eval.get_average_rating }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'view_evaluation' eval.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-eye"></i> Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="teacher-empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No evaluations available.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <!-- My Subjects Section -->
+        <section id="subjects" class="teacher-section">
+            <div class="card mb-4 teacher-header-card">
+                <div class="card-body">
+                    <h2>
+                        <i class="fas fa-book text-danger"></i>
+                        <strong> My Teaching Subjects</strong>
+                    </h2>
+                    <small class="text-muted teacher-admin-label">
+                        <strong>Subjects I'm Currently Teaching</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="teacher-content-card" style="margin-left: 30px; max-width: 95%;">
+                <div class="card-header">
+                    <h4><i class="fas fa-book-open"></i> Subject List</h4>
+                </div>
+                <div class="card-body">
+                    {% if teacher.subjects.all %}
+                    <div class="teacher-subjects-grid">
+                        {% for subject in teacher.subjects.all %}
+                        <div class="teacher-subject-card">
+                            <div class="teacher-subject-code">{{ subject.code }}</div>
+                            <div class="teacher-subject-name">{{ subject.name }}</div>
+                            <div class="teacher-subject-info">
+                                <span>
+                                    <i class="fas fa-layer-group"></i>
+                                    {{ subject.get_year_level_display }}
+                                </span>
+                                <span>
+                                    <i class="fas fa-building"></i>
+                                    {{ subject.department.code }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="teacher-empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <p>No subjects assigned yet.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Section -->
+        <section id="performance" class="teacher-section">
+            <div class="card mb-4 teacher-header-card">
+                <div class="card-body">
+                    <h2>
+                        <i class="fas fa-chart-bar text-danger"></i>
+                        <strong> Performance Analytics</strong>
+                    </h2>
+                    <small class="text-muted teacher-admin-label">
+                        <strong>Detailed Performance Breakdown</strong>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Bar Chart + Radar Chart Side by Side - NEW! -->
+            <div class="row" style="margin-left: 15px; margin-right: 15px;">
+                <div class="col-md-6">
+                    <div class="teacher-content-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-bar"></i> Category Breakdown</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="performanceDetailChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="teacher-content-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-star"></i> Performance Radar</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="radarChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ratings by Subject Chart + Doughnut Chart - NEW! -->
+            {% if subject_labels %}
+            <div class="row" style="margin-left: 15px; margin-right: 15px; position: relative; top: -150px;">
+                <div class="col-md-6">
+                    <div class="teacher-content-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-book"></i> Ratings by Subject</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="subjectRatingsChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="position: relative; top: 100px;">
+                    <div class="teacher-content-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-pie"></i> Subject Distribution</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="subjectDoughnutChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Performance Summary -->
+            <div class="row" style="margin-left: 15px; margin-right: 15px; margin-top: 20px; position: relative; top: -350px;">
+                <div class="col-md-6">
+                    <div class="teacher-content-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-trophy"></i> Top Ratings</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">Areas where you excel based on student feedback</p>
+                            {% if all_evaluations %}
+                                <ul>
+                                    <li><strong>Presentation:</strong> {{ category_data.presentation }}/5.00</li>
+                                    <li><strong>Development:</strong> {{ category_data.development }}/5.00</li>
+                                    <li><strong>Student Behavior:</strong> {{ category_data.student_behavior }}/5.00</li>
+                                    <li><strong>Wrap-up:</strong> {{ category_data.wrapup }}/5.00</li>
+                                </ul>
+                                <hr>
+                                <p class="mb-0"><strong>Your Strongest Area:</strong> 
+                                    {% if category_data.presentation >= category_data.development and category_data.presentation >= category_data.student_behavior and category_data.presentation >= category_data.wrapup %}
+                                        <span class="badge bg-success">Presentation ({{ category_data.presentation }})</span>
+                                    {% elif category_data.development >= category_data.presentation and category_data.development >= category_data.student_behavior and category_data.development >= category_data.wrapup %}
+                                        <span class="badge bg-success">Development ({{ category_data.development }})</span>
+                                    {% elif category_data.student_behavior >= category_data.presentation and category_data.student_behavior >= category_data.development and category_data.student_behavior >= category_data.wrapup %}
+                                        <span class="badge bg-success">Student Behavior ({{ category_data.student_behavior }})</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Wrap-up ({{ category_data.wrapup }})</span>
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                <p class="text-muted">No evaluation data available yet</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="position: relative; top: 20px; margin-top: 250px;">
+                    <div class="teacher-content-card">
+                        <div class="card-header">
+                            <h4><i class="fas fa-chart-pie"></i> Summary</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">Your teaching performance at a glance</p>
+                            <ul>
+                                <li><strong>Total Students Evaluated:</strong> {{ total_evaluations }}</li>
+                                <li><strong>Average Rating:</strong> {{ average_rating }}/5</li>
+                                <li><strong>Subjects Teaching:</strong> {{ teacher.subjects.count }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <div class="footer-logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="footer-logo-text">
+                    <h3>Osmeña Colleges</h3>
+                    <p>Teacher Evaluation System</p>
+                </div>
+            </div>
+            <p>Empowering educational excellence through comprehensive teacher performance evaluation.</p>
+        </div>
+
+        <div class="footer-column">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how_it_works">How It Works</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h4>Contact</h4>
+            <div class="footer-contact">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:info@osmena.edu.ph">info@osmena.edu.ph</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <a href="tel:+63(32)1234567">+63 (32) 123-4567</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-copyright">
+            © 2025 Osmeña Colleges. All rights reserved.
+        </div>
+        <div class="social-links">
+            <a href="#facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#linkedin"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// ========================================
+// CIRCULAR PROGRESS BARS - REAL DATA
+// ========================================
+function createCircularProgress(canvasId, value, maxValue, color) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const percentage = (value / maxValue) * 100;
+    const radius = 40;
+    const centerX = 50;
+    const centerY = 50;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, 100, 100);
+    
+    // Background circle
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    
+    // Progress arc
+    const startAngle = -Math.PI / 2;
+    const endAngle = startAngle + (2 * Math.PI * percentage / 100);
+    
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    
+    // Center text
+    ctx.fillStyle = color;
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(value.toFixed(1), centerX, centerY);
+}
+
+// Create all 4 circular progress bars with REAL DATA
+createCircularProgress('presentationCircle', {{ category_data.presentation }}, 5, 'maroon');
+createCircularProgress('developmentCircle', {{ category_data.development }}, 5, '#8B0000');
+createCircularProgress('studentCircle', {{ category_data.student_behavior }}, 5, '#A52A2A');
+createCircularProgress('wrapupCircle', {{ category_data.wrapup }}, 5, '#B22222');
+
+// Sidebar navigation
+document.querySelectorAll('.teacher-sidebar-item a[data-section]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = this.dataset.section;
+        document.querySelectorAll('.teacher-section').forEach(section => {
+            section.classList.remove('active-section');
+        });
+        document.getElementById(target)?.classList.add('active-section');
+        document.querySelectorAll('.teacher-sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        this.closest('.teacher-sidebar-item').classList.add('active');
+    });
+});
+
+// Performance Chart (Overview) - LINE CHART with REAL DATA
+const ctx = document.getElementById('performanceChart');
+if (ctx) {
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [
+                {% for label in weekly_labels %}
+                    '{{ label }}'{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Average Rating',
+                data: [
+                    {% for rating in weekly_ratings %}
+                        {{ rating }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                borderColor: 'maroon',
+                backgroundColor: 'rgba(128, 0, 0, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: 'maroon',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 0.5 }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: { font: { weight: 'bold' } }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Rating: ' + context.parsed.y.toFixed(2) + '/5.00';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Performance Detail Chart - BAR CHART with REAL DATA
+const ctxDetail = document.getElementById('performanceDetailChart');
+if (ctxDetail) {
+    new Chart(ctxDetail, {
+        type: 'bar',
+        data: {
+            labels: ['Presentation', 'Development', 'Student Behavior', 'Wrap-up'],
+            datasets: [{
+                label: 'Average Scores',
+                data: [
+                    {{ category_data.presentation }},
+                    {{ category_data.development }},
+                    {{ category_data.student_behavior }},
+                    {{ category_data.wrapup }}
+                ],
+                backgroundColor: [
+                    'rgba(128, 0, 0, 0.7)',
+                    'rgba(139, 0, 0, 0.7)',
+                    'rgba(165, 42, 42, 0.7)',
+                    'rgba(178, 34, 34, 0.7)'
+                ],
+                borderColor: 'maroon',
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 0.5 }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed.y.toFixed(2) + '/5.00';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// RADAR CHART - NEW! with REAL DATA
+const ctxRadar = document.getElementById('radarChart');
+if (ctxRadar) {
+    new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: ['Presentation', 'Development', 'Student Behavior', 'Wrap-up'],
+            datasets: [{
+                label: 'My Performance',
+                data: [
+                    {{ category_data.presentation }},
+                    {{ category_data.development }},
+                    {{ category_data.student_behavior }},
+                    {{ category_data.wrapup }}
+                ],
+                backgroundColor: 'rgba(128, 0, 0, 0.2)',
+                borderColor: 'maroon',
+                borderWidth: 2,
+                pointBackgroundColor: 'maroon',
+                pointBorderColor: '#fff',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 1 }
+                }
+            },
+            plugins: {
+                legend: { display: true }
+            }
+        }
+    });
+}
+
+// Subject Ratings Chart - HORIZONTAL BAR with REAL DATA
+const ctxSubject = document.getElementById('subjectRatingsChart');
+if (ctxSubject) {
+    new Chart(ctxSubject, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for label in subject_labels %}
+                    '{{ label }}'{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Average Rating',
+                data: [
+                    {% for rating in subject_ratings %}
+                        {{ rating }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(128, 0, 0, 0.6)',
+                borderColor: 'maroon',
+                borderWidth: 2,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: { stepSize: 0.5 }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Rating: ' + context.parsed.x.toFixed(2) + '/5.00';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// DOUGHNUT CHART - NEW! with REAL DATA
+const ctxDoughnut = document.getElementById('subjectDoughnutChart');
+if (ctxDoughnut) {
+    const colors = [
+        'rgba(128, 0, 0, 0.8)',
+        'rgba(139, 0, 0, 0.8)',
+        'rgba(165, 42, 42, 0.8)',
+        'rgba(178, 34, 34, 0.8)',
+        'rgba(205, 92, 92, 0.8)',
+        'rgba(220, 20, 60, 0.8)'
+    ];
+    
+    new Chart(ctxDoughnut, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for label in subject_labels %}
+                    '{{ label }}'{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for rating in subject_ratings %}
+                        {{ rating }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: colors.slice(0, {{ subject_labels|length }}),
+                borderColor: 'white',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 11 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed.toFixed(2) + '/5.00';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Animate stat cards on load
+window.addEventListener('load', function() {
+    const statCards = document.querySelectorAll('.teacher-stat-card');
+    statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+
+    // Animate numbers
+    const statNumbers = document.querySelectorAll('.teacher-stat-card h3');
+    statNumbers.forEach(num => {
+        const text = num.textContent;
+        const match = text.match(/\d+/);
+        if (match) {
+            const finalValue = parseInt(match[0]);
+            let current = 0;
+            const increment = finalValue / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= finalValue) {
+                    num.textContent = text;
+                    clearInterval(timer);
+                } else {
+                    num.textContent = text.replace(/\d+/, Math.floor(current));
+                }
+            }, 30);
+        }
+    });
+});
+</script>
+{% endblock %}

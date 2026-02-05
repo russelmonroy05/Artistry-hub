@@ -1,0 +1,479 @@
+/* Teacher Dashboard CSS - Matching Admin Style */
+
+/* Main Layout */
+.teacher-screen {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.teacher-sidebar {
+    width: 280px;
+    background-color: #a19b9b;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    border-right: #480202 4px solid;
+    z-index: 1000;
+    margin-top: 60px;
+}
+
+.teacher-sidebar-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    border-radius: 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin-top: 40px;
+    border-top-right-radius: 50px solid #480202;
+}
+
+/* Profile Section */
+.teacher-profile-section {
+    text-align: center;
+    padding: 30px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.teacher-profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #480202;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    display: block;
+}
+
+.teacher-profile-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(72, 2, 2, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: #480202;
+    margin: 0 auto 15px;
+    border: 3px solid #480202;
+    font-weight: bold;
+}
+
+.teacher-profile-name {
+    color: #3b0202;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.teacher-profile-id {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.teacher-rating-badge {
+    display: inline-block;
+    background: rgba(128, 0, 0, 0.15);
+    padding: 8px 15px;
+    border-radius: 20px;
+    color: maroon;
+    font-weight: 600;
+    border: 2px solid maroon;
+}
+
+/* Sidebar Links */
+.teacher-sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+}
+
+.teacher-sidebar-item {
+    padding: 0;
+}
+
+.teacher-sidebar-item a {
+    display: block;
+    padding: 12px 15px;
+    color: #3b0202;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.teacher-sidebar-item.logout {
+    margin-top: 50px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    border: none;
+}
+
+/* Blur effect */
+.teacher-sidebar-links:hover .teacher-sidebar-item a {
+    filter: blur(2px);
+    opacity: 0.6;
+}
+
+.teacher-sidebar-links .teacher-sidebar-item a:hover {
+    filter: none;
+    opacity: 1;
+    background-color: maroon;
+    color: white;
+    transform: translateX(10px);
+}
+
+.teacher-sidebar-item.active a {
+    background-color: maroon;
+    color: white;
+}
+
+/* Main Content */
+.teacher-main-content {
+    margin-left: 280px;
+    flex: 1;
+    padding: 30px;
+}
+
+/* Header Card */
+.teacher-header-card {
+    max-width: 90%;
+    margin-left: 35px;
+    background-color: transparent;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.teacher-header-card h2 {
+    color: #050000 !important;
+}
+
+.teacher-header-card i {
+    color: #6e0202 !important;
+}
+
+.teacher-admin-label {
+    margin-left: 100px;
+    font-size: 14px;
+    position: relative;
+    bottom: 10px;
+    color: #6e0202 !important;
+}
+
+/* Stat Cards */
+.teacher-stats-layout {
+    max-width: 500px;
+    margin-left: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.teacher-stat-card {
+    min-height: 140px;
+    font-size: 14px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    color: #000000 !important;
+    border: 3px solid rgba(51, 0, 0, 0.25) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.teacher-stat-card:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+.teacher-stat-card i {
+    color: rgb(65, 0, 0) !important;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.teacher-stat-card h3 {
+    font-size: 1.5rem;
+    margin: 10px 0 5px 0;
+}
+
+.teacher-stat-card p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Chart Card */
+.teacher-chart-card {
+    position: relative;
+    max-width: 700px;
+    margin-left: 30px;
+    left: 510px;
+    top: -300px;
+    border-right: #3b0202 4px solid;
+    border-bottom: #3b0202 4px solid;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Content Cards */
+.teacher-content-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 3px solid rgba(51, 0, 0, 0.15);
+}
+
+.teacher-content-card .card-header {
+    background: linear-gradient(135deg, maroon 0%, #480202 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px 10px 0 0;
+    border: none;
+}
+
+.teacher-content-card .card-header h4 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.teacher-content-card .card-body {
+    padding: 20px;
+}
+
+/* Sections */
+.teacher-section {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.teacher-section.active-section {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Table Styles */
+.teacher-table {
+    width: 100%;
+    background: white;
+}
+
+.teacher-table thead {
+    background: #f7fafc;
+}
+
+.teacher-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #2d3748;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.teacher-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.teacher-table tbody tr:hover {
+    background: #f7fafc;
+}
+
+/* Rating Stars */
+.rating-stars {
+    color: #ffc107;
+}
+
+.rating-stars i {
+    margin: 0 2px;
+}
+
+/* Subjects Grid */
+.teacher-subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.teacher-subject-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid maroon;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.teacher-subject-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.teacher-subject-code {
+    font-weight: 700;
+    color: maroon;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.teacher-subject-name {
+    color: #4a5568;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.teacher-subject-info {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    color: #718096;
+}
+
+.teacher-subject-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Empty State */
+.teacher-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.teacher-empty-state i {
+    font-size: 64px;
+    color: #cbd5e0;
+    margin-bottom: 20px;
+}
+
+.teacher-empty-state p {
+    color: #718096;
+    font-size: 16px;
+}
+
+/* Badge Overrides */
+.badge {
+    color: rgb(66, 9, 9) !important;
+    background-color: transparent !important;
+    border: 2px solid rgb(150, 19, 19) !important;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+}
+
+/* Footer Adjustment */
+footer {
+    margin-left: 280px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .teacher-sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        border-right: none;
+        border-bottom: 4px solid #480202;
+    }
+
+    .teacher-main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .teacher-stats-layout {
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .teacher-chart-card {
+        position: static;
+        left: 0;
+        top: 0;
+        max-width: 100%;
+        margin: 20px 0;
+    }
+
+    .teacher-sidebar-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow-x: auto;
+    }
+
+    .teacher-sidebar-item a {
+        font-size: 14px;
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+
+    footer {
+        margin-left: 0;
+    }
+
+    .teacher-header-card {
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .teacher-admin-label {
+        margin-left: 0;
+    }
+}
+
+/* Stat card animations */
+.teacher-stat-card h3 {
+    transition: all 0.3s ease;
+}
+
+.teacher-stat-card:hover h3 {
+    transform: scale(1.1);
+}
+
+/* Button Styles */
+.btn-primary {
+    background: maroon !important;
+    border-color: maroon !important;
+}
+
+.btn-primary:hover {
+    background: #480202 !important;
+    border-color: #480202 !important;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}

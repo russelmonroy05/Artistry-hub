@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Subjects - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-book"></i> Manage Subjects</h4>
+                <div>
+                    <a href="/admin/evaluation/subject/add/" class="btn btn-light btn-sm me-2" target="_blank">
+                        <i class="fas fa-plus"></i> Add New Subject
+                    </a>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if subjects %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Teachers</th>
+                            <th>Evaluations</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                        <tr>
+                            <td><strong>{{ subject.code }}</strong></td>
+                            <td>{{ subject.name }}</td>
+                            <td>{{ subject.description|truncatewords:10 }}</td>
+                            <td>
+                                <span class="badge bg-success">{{ subject.teachers.count }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-warning text-dark">{{ subject.evaluation_set.count }}</span>
+                            </td>
+                            <td>
+                                <a href="/admin/evaluation/subject/{{ subject.id }}/change/"
+                                    class="btn btn-sm btn-primary" target="_blank">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                <p>No subjects available.</p>
+                <a href="/admin/evaluation/subject/add/" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-plus"></i> Add First Subject
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

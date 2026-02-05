@@ -1,0 +1,437 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %}View COR - {{ student.user.get_full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cor-container {
+        padding: 2rem 0;
+    }
+    
+    .cor-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .cor-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 2rem;
+    }
+    
+    .cor-header h2 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    
+    .cor-body {
+        padding: 2rem;
+    }
+    
+    .student-info {
+        background: #f8fafc;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+    
+    .student-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .student-info-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .student-info-item strong {
+        min-width: 120px;
+        color: #334155;
+    }
+    
+    .cor-preview {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .cor-preview embed,
+    .cor-preview img {
+        max-width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cor-preview embed {
+        min-height: 600px;
+    }
+    
+    .download-btn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+        color: white;
+    }
+    
+    .subject-assignment {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        border: 2px solid #e2e8f0;
+    }
+    
+    .back-btn {
+        background: #64748b;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+    }
+    
+    .back-btn:hover {
+        background: #475569;
+        color: white;
+        transform: translateX(-4px);
+    }
+    
+    .no-cor {
+        text-align: center;
+        padding: 3rem;
+        color: #64748b;
+    }
+    
+    .no-cor i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    /* Tab styling */
+    .nav-tabs {
+        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 1rem;
+    }
+
+    .nav-tabs .nav-link {
+        color: #64748b;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #3b82f6;
+        border-color: transparent;
+        background: transparent;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #3b82f6;
+        background-color: transparent;
+        border-bottom: 3px solid #3b82f6;
+    }
+
+    .list-group-item {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .list-group-item:hover {
+        background-color: #f8fafc;
+    }
+
+    form {
+        margin-bottom: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container cor-container">
+    <a href="{% url 'admin_dashboard' %}" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+    
+    <div class="cor-card">
+        <div class="cor-header">
+            <h2>
+                <i class="fas fa-file-pdf"></i> 
+                Certificate of Registration - {{ student.user.get_full_name }}
+            </h2>
+        </div>
+        
+        <div class="cor-body">
+            <div class="row">
+                <!-- Left Column: COR Preview -->
+                <div class="col-md-6">
+                    <h4 class="mb-3">Student Information</h4>
+                    <div class="student-info">
+                        <div class="student-info-item">
+                            <strong>Name:</strong>
+                            <span>{{ student.user.get_full_name }}</span>
+                        </div>
+                        <div class="student-info-item">
+                            <strong>Student ID:</strong>
+                            <span>{{ student.student_id_number }}</span>
+                        </div>
+                        <div class="student-info-item">
+                            <strong>Email:</strong>
+                            <span>{{ student.user.email }}</span>
+                        </div>
+                        <div class="student-info-item">
+                            <strong>Year Level:</strong>
+                            <span>{{ student.get_year_level_display }}</span>
+                        </div>
+                        <div class="student-info-item">
+                            <strong>Course:</strong>
+                            <span>{{ student.course }}</span>
+                        </div>
+                        <div class="student-info-item">
+                            <strong>Department:</strong>
+                            <span>{{ student.department.name }} ({{ student.department.code }})</span>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mb-3">COR Document</h4>
+                    {% if student.certificate_of_registration %}
+                        <div class="cor-preview">
+                            {% if student.certificate_of_registration.url|slice:"-4:" == '.pdf' %}
+                                <embed src="{{ student.certificate_of_registration.url }}" 
+                                       type="application/pdf" 
+                                       width="100%" 
+                                       height="600px">
+                            {% else %}
+                                <img src="{{ student.certificate_of_registration.url }}" 
+                                     alt="Certificate of Registration"
+                                     style="max-width: 100%; height: auto;">
+                            {% endif %}
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="{{ student.certificate_of_registration.url }}" 
+                               class="download-btn" 
+                               download>
+                                <i class="fas fa-download"></i> Download COR
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="no-cor">
+                            <i class="fas fa-file-times"></i>
+                            <p>No COR uploaded</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Right Column: Subject Assignment -->
+                <div class="col-md-6">
+                    <h4 class="mb-3">Assign Subjects to Student</h4>
+                    
+                    <!-- Tab Navigation -->
+                    <ul class="nav nav-tabs" id="assignmentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" 
+                                    id="existing-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#existing" 
+                                    type="button" 
+                                    role="tab"
+                                    aria-controls="existing"
+                                    aria-selected="true">
+                                <i class="fas fa-list"></i> Select from List
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" 
+                                    id="new-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#new" 
+                                    type="button" 
+                                    role="tab"
+                                    aria-controls="new"
+                                    aria-selected="false">
+                                <i class="fas fa-plus-circle"></i> Add New Subject
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="assignmentTabContent">
+                        
+                        <!-- TAB 1: Select from Existing Subjects -->
+                        <div class="tab-pane fade show active" 
+                             id="existing" 
+                             role="tabpanel"
+                             aria-labelledby="existing-tab">
+                            <div class="subject-assignment card p-4 mt-3">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="assignment_type" value="existing">
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Subject from COR *</label>
+                                        <select name="subject_id" class="form-control" required>
+                                            <option value="">-- Select Subject --</option>
+                                            {% for subject in available_subjects %}
+                                            <option value="{{ subject.id }}">
+                                                {{ subject.code }} - {{ subject.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle"></i> 
+                                            Choose a subject from the existing list
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Teacher *</label>
+                                        <select name="teacher_id" class="form-control" required>
+                                            <option value="">-- Select Teacher --</option>
+                                            {% for teacher in teachers %}
+                                            <option value="{{ teacher.id }}">
+                                                {{ teacher.user.get_full_name }} - {{ teacher.department.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-check"></i> Assign Subject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- TAB 2: Add New Subject -->
+                        <div class="tab-pane fade" 
+                             id="new" 
+                             role="tabpanel"
+                             aria-labelledby="new-tab">
+                            <div class="subject-assignment card p-4 mt-3">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <strong>Can't find the subject?</strong> Create a new one here based on the student's COR.
+                                </div>
+                                
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="assignment_type" value="new">
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Subject Code *</label>
+                                        <input type="text" name="subject_code" class="form-control" 
+                                               placeholder="e.g., CS101" required>
+                                        <small class="text-muted">Enter the subject code from the COR</small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Subject Name *</label>
+                                        <input type="text" name="subject_name" class="form-control" 
+                                               placeholder="e.g., Introduction to Programming" required>
+                                        <small class="text-muted">Enter the full subject name</small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Teacher *</label>
+                                        <select name="teacher_id" class="form-control" required>
+                                            <option value="">-- Select Teacher --</option>
+                                            {% for teacher in teachers %}
+                                            <option value="{{ teacher.id }}">
+                                                {{ teacher.user.get_full_name }} - {{ teacher.department.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-success w-100">
+                                        <i class="fas fa-plus"></i> Create & Assign Subject
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Currently Assigned Subjects -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">Currently Assigned Subjects ({{ assigned_subjects.count }})</h5>
+                        
+                        {% if assigned_subjects %}
+                        <div class="list-group">
+                            {% for assignment in assigned_subjects %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">
+                                            <span class="badge bg-primary">{{ assignment.subject_code }}</span>
+                                            {{ assignment.subject_name }}
+                                        </h6>
+                                        <p class="mb-1">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                            <strong>Teacher:</strong> {{ assignment.teacher.user.get_full_name }}
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock"></i> 
+                                            Assigned on {{ assignment.created_at|date:"M d, Y" }}
+                                        </small>
+                                    </div>
+                                    <a href="{% url 'delete_student_subject' assignment.id %}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Remove this subject from {{ student.user.get_full_name }}?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            No subjects assigned yet. Review the COR and assign subjects above.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Bootstrap 5 JavaScript (Required for tabs) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

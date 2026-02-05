@@ -1,0 +1,790 @@
+[
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2025-12-24T17:33:31.094Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "1",
+    "object_repr": "admin (Admin)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"User type\", \"Phone\", \"Is email verified\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2025-12-24T17:34:02.251Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "CCS - College of Computer Science",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2025-12-24T17:34:40.644Z",
+    "user": 1,
+    "content_type": 6,
+    "object_id": "1",
+    "object_repr": "CCS - College of Computer Science",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2025-12-24T17:39:00.596Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "2",
+    "object_repr": "Russzxx (Teacher)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 5,
+  "fields": {
+    "action_time": "2025-12-24T17:42:20.344Z",
+    "user": 1,
+    "content_type": 7,
+    "object_id": "3",
+    "object_repr": "Russzxx (Teacher)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 6,
+  "fields": {
+    "action_time": "2025-12-26T14:53:21.628Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "AcademicYear object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 7,
+  "fields": {
+    "action_time": "2025-12-26T14:54:15.307Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "1",
+    "object_repr": "Semester object (1)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 8,
+  "fields": {
+    "action_time": "2025-12-26T14:54:48.896Z",
+    "user": 1,
+    "content_type": 14,
+    "object_id": "2",
+    "object_repr": "Semester object (2)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 9,
+  "fields": {
+    "action_time": "2025-12-26T14:56:20.766Z",
+    "user": 1,
+    "content_type": 15,
+    "object_id": "1",
+    "object_repr": "Evaluation Settings for Academic Year - 1st Semester (Closed)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 10,
+  "fields": {
+    "action_time": "2025-12-26T15:00:13.553Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "AcademicYear object (1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 11,
+  "fields": {
+    "action_time": "2025-12-26T16:06:07.409Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "1",
+    "object_repr": "Micaella evaluated Russzxx - Thesis 102",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 12,
+  "fields": {
+    "action_time": "2025-12-28T01:48:24.034Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "Academic Year (2025-2026)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Start Year\", \"End Year\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 13,
+  "fields": {
+    "action_time": "2025-12-28T02:31:12.594Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "micaella Gonzales (20S0313)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 14,
+  "fields": {
+    "action_time": "2025-12-28T05:19:40.327Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "micaella Gonzales (20S0313)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Course\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 15,
+  "fields": {
+    "action_time": "2025-12-28T07:28:52.412Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "1",
+    "object_repr": "Academic Year (2025-2026)",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "0gkefb72fcrlmeurhrybrp2k9zz290oj",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSFAeQxduvcbyFBGixpoSptojP-uTbrQ7T3nnhcLuC5jWBvNISfWM8kOv1vE4UZlA-mK5VL5UMsy58g3he-08VNNdD_u7l9gxDZ-30BGdyJCB0aQ1N5Z6Ywk8l4LC8p3FFM0FpzxGBFQAWqlyINBF60_b9FGreVaAj2mPD9ZL94fQBE-Fg:1vaSsP:JJYho8p3SgRckAekgX_NdKsN3AB7GB_BEbKC5cR0PQ0",
+    "expire_date": "2026-01-13T06:06:37.086Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "0tdwlp2yz2c6pa3clj78jk3vuea8bti0",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSFAeQxduvcbyFBGixpoSptojP-uTbrQ7T3nnhcLuC5jWBvNISfWM8kOv1vE4UZlA-mK5VL5UMsy58g3he-08VNNdD_u7l9gxDZ-30BGdyJCB0aQ1N5Z6Ywk8l4LC8p3FFM0FpzxGBFQAWqlyINBF60_b9FGreVaAj2mPD9ZL94fQBE-Fg:1vZ2a2:NyJ0w7z69FulYVutSDsKrXO-1bH106qtVT1lYwamfNM",
+    "expire_date": "2026-01-09T07:49:46.826Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "161rjowvfg3dvbtp1j86mrba5y69b2c7",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSFAeQxduvcbyFBGixpoSptojP-uTbrQ7T3nnhcLuC5jWBvNISfWM8kOv1vE4UZlA-mK5VL5UMsy58g3he-08VNNdD_u7l9gxDZ-30BGdyJCB0aQ1N5Z6Ywk8l4LC8p3FFM0FpzxGBFQAWqlyINBF60_b9FGreVaAj2mPD9ZL94fQBE-Fg:1vZl5b:oS5BtML9XvlQrKFCmCzvWilJhjZT2fp1EstfTCWGpvY",
+    "expire_date": "2026-01-11T07:21:19.143Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ciexrb9kq0jtajnlxx649kzkzw5t7fh7",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2pABKlCX7j0DgZmpRQ2Y0iYa4921SRe6_e_99xIhLvMYlsZTyCQOohO73y1FvHJZAV1iOVeJtcxTTnJV5EabPFXi23Fz_wJjbOP3DTZxBOww9g4NK-TBe6d74DRE7JRxSnsHXvW0B9JknQGwVhnUypPVa7Rxa7mWwI97np7iAO8Ph1g-cw:1vcksK:e6lfgikqt6vgkLeZy2Qask2HHEi1gFiTwaF-WjM8gJ4",
+    "expire_date": "2026-01-19T13:44:00.251Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "h83772gppns1pqadqcjwupnsndfeckzn",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSGUVx9L934DGYZRUANNaRON8d9tTRe6vefc82IOljm6pdLkUmADa9nhd_OAN8obCFfIl8Kx5HlKnm8K32nlpxLoftzdv0CEGte3wSBRGaXBogoeOzS6sR3ongQhKSuFt74Bo0if_YpQo6S2XxVhjf1GK9WaSnb0GNP0ZIN4fwCb6T85:1vdJ5g:D6L-pgwXe82pNnrd_Wv5MaWhDQ0c237fk_dthe2ixCo",
+    "expire_date": "2026-01-21T02:16:04.663Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "iqskr2ut46travi8ozktifp3gf6olik3",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSFAeQxduvcbyFBGixpoSptojP-uTbrQ7T3nnhcLuC5jWBvNISfWM8kOv1vE4UZlA-mK5VL5UMsy58g3he-08VNNdD_u7l9gxDZ-30BGdyJCB0aQ1N5Z6Ywk8l4LC8p3FFM0FpzxGBFQAWqlyINBF60_b9FGreVaAj2mPD9ZL94fQBE-Fg:1vcd6L:BUzuG2aEKozLES0kZzIO-GF27A6JulCFksFuQ-qaiAY",
+    "expire_date": "2026-01-19T05:25:57.245Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "s7t90pq8gvgj7qohemc5ttkimkmb2rgt",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSFAeQxduvcbyFBGixpoSptojP-uTbrQ7T3nnhcLuC5jWBvNISfWM8kOv1vE4UZlA-mK5VL5UMsy58g3he-08VNNdD_u7l9gxDZ-30BGdyJCB0aQ1N5Z6Ywk8l4LC8p3FFM0FpzxGBFQAWqlyINBF60_b9FGreVaAj2mPD9ZL94fQBE-Fg:1vcdoe:fcClfRAQCx-CVvfJx53XTedJ8YM0mT-Kme35l1_07cc",
+    "expire_date": "2026-01-19T06:11:44.645Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "wrp51mptpa99z2cue0vbc53hxn0qreel",
+  "fields": {
+    "session_data": ".eJxVjMsOwiAQRf-FtSEUOu3QpXu_gfAYLGrAQJtojP-uTbrQ7T3nnhczdl1mszaqJgU2MWCH381Zf6W8gXCx-Vy4L3mpyfFN4Ttt_FQC3Y67-xeYbZu_by1Uh2RBDKMA6hAiEQ4YvCQtAWKIKCmqXgjlnXcgPILsFTjUWtKot2ij1lLJhh73VJ9sEu8Pb_w-mw:1vgF65:BM1i6CRZjFfdHnPoWMbrIs6DttLRXV3g6tqEcSL0XbA",
+    "expire_date": "2026-01-29T04:36:37.092Z"
+  }
+},
+{
+  "model": "evaluation.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$C9Duy6tJCVw0PA938GQroi$8CqynroxUCAv6z5oJQ1MhkLDeS6qMYeRiPI960qtGNQ=",
+    "last_login": "2026-02-03T01:44:22.324Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Russel",
+    "last_name": "Monroy",
+    "email": "admin@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-12-24T17:31:50Z",
+    "user_type": "admin",
+    "phone": "09519041632",
+    "profile_picture": "",
+    "bio": "",
+    "is_email_verified": true,
+    "is_pending": false,
+    "email_verification_token": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "evaluation.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$9avx9xHMp4vZvDwRP1qUSY$uUZw1WvpdKOtmX/nGyh7D6/l6L7WC8tgIBMX/r5lYos=",
+    "last_login": "2026-02-03T01:37:16.801Z",
+    "is_superuser": false,
+    "username": "Russzxx",
+    "first_name": "Russel",
+    "last_name": "Monroy",
+    "email": "russelmonroy2@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-24T17:43:20.349Z",
+    "user_type": "teacher",
+    "phone": "09519041632",
+    "profile_picture": "",
+    "bio": null,
+    "is_email_verified": true,
+    "is_pending": false,
+    "email_verification_token": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "evaluation.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$ckIUH1Tc9pWqqMzTfy9R0N$yEWny3Z0ScGoHV7HnOFEwPVtDXYsSYBPgmsX+rHySRk=",
+    "last_login": "2026-01-26T13:52:28.482Z",
+    "is_superuser": false,
+    "username": "Micaella",
+    "first_name": "micaella",
+    "last_name": "Gonzales",
+    "email": "russelmonroy1@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-24T17:47:33.373Z",
+    "user_type": "student",
+    "phone": "09519041632",
+    "profile_picture": "",
+    "bio": null,
+    "is_email_verified": true,
+    "is_pending": false,
+    "email_verification_token": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "evaluation.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$X48JPt63MAj7N5soePVLWQ$84XQ5I8U0NHcJUYqJ0m3x7UtzIsbyiv2Z/pNSiL7E50=",
+    "last_login": "2026-02-03T01:43:14.759Z",
+    "is_superuser": false,
+    "username": "Jesica",
+    "first_name": "Jessica",
+    "last_name": "Anave",
+    "email": "jesicaanave@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-28T07:12:59.576Z",
+    "user_type": "teacher",
+    "phone": "09519041632",
+    "profile_picture": "",
+    "bio": "",
+    "is_email_verified": true,
+    "is_pending": false,
+    "email_verification_token": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "evaluation.user",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$2Sc6r8pduRe9cGJRGGMCGM$TZ4/HneuyzMw70+EYgyRF4H/E25ftHsWQqmKyCAHohA=",
+    "last_login": "2026-02-03T01:36:17.711Z",
+    "is_superuser": false,
+    "username": "Justine",
+    "first_name": "Justine",
+    "last_name": "Aban",
+    "email": "justineaban12@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-12-28T07:16:42.912Z",
+    "user_type": "teacher",
+    "phone": "09519041632",
+    "profile_picture": "",
+    "bio": null,
+    "is_email_verified": true,
+    "is_pending": false,
+    "email_verification_token": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "evaluation.department",
+  "pk": 1,
+  "fields": {
+    "name": "College of Computer Science",
+    "code": "CCS",
+    "description": "",
+    "head_of_department": "Engr. Violeta V. Montecalvo"
+  }
+},
+{
+  "model": "evaluation.subject",
+  "pk": 1,
+  "fields": {
+    "name": "Thesis",
+    "code": "Thesis 102",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "days": "",
+    "description": "Subject added from COR for micaella Gonzales",
+    "year_level": 4,
+    "department": 1,
+    "created_by": null,
+    "created_at": "2025-12-24T17:48:33.271Z",
+    "updated_at": "2025-12-24T17:48:33.271Z"
+  }
+},
+{
+  "model": "evaluation.subject",
+  "pk": 2,
+  "fields": {
+    "name": "Software Deployment And Marketing",
+    "code": "SDM 101",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "days": "",
+    "description": "Subject added from COR for micaella Gonzales",
+    "year_level": 4,
+    "department": 1,
+    "created_by": null,
+    "created_at": "2025-12-24T17:48:44.749Z",
+    "updated_at": "2025-12-24T17:48:44.749Z"
+  }
+},
+{
+  "model": "evaluation.subject",
+  "pk": 3,
+  "fields": {
+    "name": "Discret Mathematics",
+    "code": "DS 101",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "days": "",
+    "description": "Subject added from COR for micaella Gonzales",
+    "year_level": 4,
+    "department": 1,
+    "created_by": null,
+    "created_at": "2025-12-28T07:18:04.377Z",
+    "updated_at": "2026-01-15T01:59:56.451Z"
+  }
+},
+{
+  "model": "evaluation.subject",
+  "pk": 4,
+  "fields": {
+    "name": "Modeling and Simulations",
+    "code": "MS 101",
+    "start_time": "09:00:00",
+    "end_time": "10:00:00",
+    "days": "",
+    "description": "Subject added from COR for micaella Gonzales",
+    "year_level": 4,
+    "department": 1,
+    "created_by": null,
+    "created_at": "2025-12-28T07:18:27.817Z",
+    "updated_at": "2025-12-28T07:18:27.817Z"
+  }
+},
+{
+  "model": "evaluation.teacherprofile",
+  "pk": 2,
+  "fields": {
+    "user": 4,
+    "employee_id": "123456",
+    "profile_picture": "teacher_profiles/496485537_1355726448814884_8237757586175047853_n_CxHv3vG.jpg",
+    "department": 1,
+    "qualification": "Master's in Computer Science",
+    "experience_years": 4,
+    "subjects": [
+      2,
+      1
+    ]
+  }
+},
+{
+  "model": "evaluation.teacherprofile",
+  "pk": 3,
+  "fields": {
+    "user": 6,
+    "employee_id": "102816",
+    "profile_picture": "teacher_profiles/jessica.jpg",
+    "department": 1,
+    "qualification": "Master's in Computer Science",
+    "experience_years": 4,
+    "subjects": [
+      3,
+      4
+    ]
+  }
+},
+{
+  "model": "evaluation.teacherprofile",
+  "pk": 4,
+  "fields": {
+    "user": 7,
+    "employee_id": "654321",
+    "profile_picture": "teacher_profiles/justine.jpg",
+    "department": 1,
+    "qualification": "Master's in Computer Science",
+    "experience_years": 4,
+    "subjects": [
+      3
+    ]
+  }
+},
+{
+  "model": "evaluation.studentprofile",
+  "pk": 1,
+  "fields": {
+    "user": 5,
+    "student_id_number": "20S0313",
+    "profile_picture": "student_profiles/57ca981288bb93099699264eed00dddd_U3rUuCv.jpg",
+    "year_level": 4,
+    "course": "Bachelor of Science in Computer Science",
+    "section": "A",
+    "certificate_of_registration": "student_cor/2025/12/assessment_jGSZeyX.jpg",
+    "cor_uploaded_at": "2025-12-24T17:47:34.162Z",
+    "department": 1
+  }
+},
+{
+  "model": "evaluation.studentsubject",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "subject": 1,
+    "subject_name": "Thesis",
+    "subject_code": "Thesis 102",
+    "teacher": 2,
+    "created_at": "2025-12-24T17:48:33.289Z"
+  }
+},
+{
+  "model": "evaluation.studentsubject",
+  "pk": 2,
+  "fields": {
+    "student": 1,
+    "subject": 2,
+    "subject_name": "Software Deployment And Marketing",
+    "subject_code": "SDM 101",
+    "teacher": 2,
+    "created_at": "2025-12-24T17:48:44.766Z"
+  }
+},
+{
+  "model": "evaluation.studentsubject",
+  "pk": 3,
+  "fields": {
+    "student": 1,
+    "subject": 3,
+    "subject_name": "Descrit Mathematics",
+    "subject_code": "DS 101",
+    "teacher": 4,
+    "created_at": "2025-12-28T07:18:04.397Z"
+  }
+},
+{
+  "model": "evaluation.studentsubject",
+  "pk": 4,
+  "fields": {
+    "student": 1,
+    "subject": 4,
+    "subject_name": "Modeling and Simulations",
+    "subject_code": "MS 101",
+    "teacher": 3,
+    "created_at": "2025-12-28T07:18:27.834Z"
+  }
+},
+{
+  "model": "evaluation.academicyear",
+  "pk": 1,
+  "fields": {
+    "name": "Academic Year",
+    "start_Year": 2025,
+    "end_Year": 2026,
+    "is_active": true
+  }
+},
+{
+  "model": "evaluation.semester",
+  "pk": 1,
+  "fields": {
+    "name": "1st Semester",
+    "start_Month": "2025-08-26",
+    "end_Month": "2025-11-26",
+    "academic_year": 1
+  }
+},
+{
+  "model": "evaluation.semester",
+  "pk": 2,
+  "fields": {
+    "name": "2nd Semester",
+    "start_Month": "2025-12-05",
+    "end_Month": "2026-07-20",
+    "academic_year": 1
+  }
+},
+{
+  "model": "evaluation.evaluationsettings",
+  "pk": 1,
+  "fields": {
+    "academic_year": 1,
+    "semester": 1,
+    "is_open": false,
+    "open_date": "2025-12-26T14:55:26Z",
+    "close_date": null
+  }
+},
+{
+  "model": "evaluation.evaluationsettings",
+  "pk": 2,
+  "fields": {
+    "academic_year": 1,
+    "semester": 2,
+    "is_open": false,
+    "open_date": "2025-12-26T15:00:29.963Z",
+    "close_date": null
+  }
+},
+{
+  "model": "evaluation.evaluation",
+  "pk": 1,
+  "fields": {
+    "student": 1,
+    "teacher": 2,
+    "subject": 1,
+    "semester": 1,
+    "academic_year": 1,
+    "presentation_objectives": 5,
+    "presentation_motivation": 5,
+    "presentation_relation": 5,
+    "presentation_assignments": 5,
+    "dev_anticipates": 5,
+    "dev_mastery": 5,
+    "dev_logical": 5,
+    "dev_expression": 5,
+    "dev_participation": 5,
+    "dev_questions": 5,
+    "dev_values": 5,
+    "dev_reinforcement": 5,
+    "dev_involvement": 5,
+    "dev_voice": 5,
+    "dev_grammar": 5,
+    "dev_monitoring": 5,
+    "dev_time": 4,
+    "student_answers": 5,
+    "student_questions": 4,
+    "student_engagement": 3,
+    "student_timeframe": 4,
+    "student_majority": 5,
+    "wrapup_demonstrate": 5,
+    "wrapup_synthesize": 5,
+    "problem_late": 1,
+    "problem_absent": 1,
+    "problem_video": 1,
+    "suggestions": "sample",
+    "created_at": "2025-12-26T15:48:09.841Z",
+    "updated_at": "2025-12-26T16:06:07.392Z"
+  }
+},
+{
+  "model": "evaluation.evaluation",
+  "pk": 2,
+  "fields": {
+    "student": 1,
+    "teacher": 4,
+    "subject": 3,
+    "semester": 1,
+    "academic_year": 1,
+    "presentation_objectives": 5,
+    "presentation_motivation": 5,
+    "presentation_relation": 5,
+    "presentation_assignments": 5,
+    "dev_anticipates": 5,
+    "dev_mastery": 5,
+    "dev_logical": 5,
+    "dev_expression": 5,
+    "dev_participation": 5,
+    "dev_questions": 5,
+    "dev_values": 5,
+    "dev_reinforcement": 5,
+    "dev_involvement": 5,
+    "dev_voice": 5,
+    "dev_grammar": 5,
+    "dev_monitoring": 5,
+    "dev_time": 5,
+    "student_answers": 5,
+    "student_questions": 5,
+    "student_engagement": 5,
+    "student_timeframe": 5,
+    "student_majority": 5,
+    "wrapup_demonstrate": 5,
+    "wrapup_synthesize": 5,
+    "problem_late": 1,
+    "problem_absent": 1,
+    "problem_video": 1,
+    "suggestions": "his good",
+    "created_at": "2025-12-29T15:19:08.697Z",
+    "updated_at": "2025-12-29T15:19:08.697Z"
+  }
+},
+{
+  "model": "evaluation.evaluation",
+  "pk": 3,
+  "fields": {
+    "student": 1,
+    "teacher": 3,
+    "subject": 4,
+    "semester": 1,
+    "academic_year": 1,
+    "presentation_objectives": 3,
+    "presentation_motivation": 3,
+    "presentation_relation": 4,
+    "presentation_assignments": 5,
+    "dev_anticipates": 2,
+    "dev_mastery": 3,
+    "dev_logical": 4,
+    "dev_expression": 4,
+    "dev_participation": 4,
+    "dev_questions": 3,
+    "dev_values": 4,
+    "dev_reinforcement": 4,
+    "dev_involvement": 4,
+    "dev_voice": 5,
+    "dev_grammar": 4,
+    "dev_monitoring": 4,
+    "dev_time": 4,
+    "student_answers": 4,
+    "student_questions": 4,
+    "student_engagement": 4,
+    "student_timeframe": 4,
+    "student_majority": 4,
+    "wrapup_demonstrate": 5,
+    "wrapup_synthesize": 5,
+    "problem_late": 2,
+    "problem_absent": 2,
+    "problem_video": 2,
+    "suggestions": "she's Good but needs some Improvements",
+    "created_at": "2026-01-07T05:37:00.044Z",
+    "updated_at": "2026-01-07T05:37:00.044Z"
+  }
+},
+{
+  "model": "evaluation.evaluation",
+  "pk": 4,
+  "fields": {
+    "student": 1,
+    "teacher": 2,
+    "subject": 1,
+    "semester": 2,
+    "academic_year": 1,
+    "presentation_objectives": 5,
+    "presentation_motivation": 5,
+    "presentation_relation": 4,
+    "presentation_assignments": 4,
+    "dev_anticipates": 4,
+    "dev_mastery": 4,
+    "dev_logical": 4,
+    "dev_expression": 5,
+    "dev_participation": 5,
+    "dev_questions": 4,
+    "dev_values": 5,
+    "dev_reinforcement": 5,
+    "dev_involvement": 4,
+    "dev_voice": 5,
+    "dev_grammar": 4,
+    "dev_monitoring": 5,
+    "dev_time": 4,
+    "student_answers": 5,
+    "student_questions": 5,
+    "student_engagement": 4,
+    "student_timeframe": 5,
+    "student_majority": 4,
+    "wrapup_demonstrate": 5,
+    "wrapup_synthesize": 4,
+    "problem_late": 1,
+    "problem_absent": 1,
+    "problem_video": 1,
+    "suggestions": "Overall he is good he just need Some Improvements",
+    "created_at": "2026-01-07T14:13:50.636Z",
+    "updated_at": "2026-01-07T14:13:50.636Z"
+  }
+}
+]

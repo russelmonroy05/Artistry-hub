@@ -1,0 +1,250 @@
+{% extends 'home.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/teacher_register.css' %}">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="teacher-register-container">
+        <div class="header">
+            <i class='bx bxs-chalkboard'></i>
+            <h3>Teacher Registration</h3>
+        </div>
+        <p class="subtitle">Create your teacher account to get started</p>
+
+
+        <form method="POST" id="registrationForm" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Profile Picture Upload Section -->
+            <div class="profile-upload-section mb-4">
+                <div class="text-center">
+                    <label class="form-label fw-bold">Profile Picture (Optional)</label>
+                    
+                    <!-- Image Preview -->
+                    <div class="profile-preview-wrapper">
+                        <img id="profilePreview" 
+                            src="https://ui-avatars.com/api/?name=Teacher&background=10b981&color=fff&size=150" 
+                            alt="Profile Preview"
+                            class="profile-preview-img">
+                        <div class="profile-upload-overlay">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- File Input (hidden) -->
+                    <input type="file" 
+                        class="d-none" 
+                        name="profile_picture" 
+                        id="profilePictureInput"
+                        accept="image/*"
+                        onchange="previewProfilePicture(event)">
+                    
+                    <!-- Upload Button -->
+                    <button type="button" class="btn btn-outline-success btn-sm mt-2" onclick="document.getElementById('profilePictureInput').click()">
+                        <i class="fas fa-upload"></i> Choose Photo
+                    </button>
+                    
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            JPG, PNG, or GIF (Max 2MB)
+                        </small>
+                    </div>
+                    
+                    {% if form.profile_picture.errors %}
+                        <div class="text-danger mt-2">
+                            <small>{{ form.profile_picture.errors }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Name Fields -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">First Name *</label>
+                    <input type="text" class="form-control custom-input" name="first_name" required placeholder="John">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Last Name *</label>
+                    <input type="text" class="form-control custom-input" name="last_name" required placeholder="Doe">
+                </div>
+            </div>
+
+            <!-- Username and Email -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Username *</label>
+                    <input type="text" class="form-control custom-input" name="username" required placeholder="johndoe">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email *</label>
+                    <div class="d-flex gap-2">
+                        <input type="email" class="form-control custom-input flex-1" id="emailInput" name="email"
+                            required placeholder="john@example.com">
+                        <button type="button" class="btn btn-outline-success btn-verify-email" id="verifyEmailBtn">
+                            <i class="fas fa-envelope"></i> Verify
+                        </button>
+                    </div>
+                    <input type="hidden" id="emailVerifiedFlag" value="false">
+                </div>
+            </div>
+
+            <!-- Employee ID and Department -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Employee ID *</label>
+                    <input type="text" class="form-control custom-input" name="employee_id" required
+                        placeholder="EMP-12345" value="{{ form.employee_id.value|default:'' }}">
+                    {% if form.employee_id.errors %}
+                        <div class="text-danger mt-1">
+                            <small>{{ form.employee_id.errors }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Department *</label>
+                   <input type="text"
+                   class="form-control custom-input" 
+                   name="department" 
+                   value="College of Computer Science" 
+                   readonly>
+                </div>
+            </div>
+
+            <!-- Phone and Experience -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <input type="text" class="form-control custom-input" name="phone" placeholder="+1 (555) 000-0000">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Years of Experience *</label>
+                    <input type="number" class="form-control custom-input" name="experience_years" required min="0"
+                        placeholder="5">
+                </div>
+            </div>
+
+            <!-- Qualification -->
+            <div class="mb-3">
+                <label class="form-label">Qualification *</label>
+                <input type="text" class="form-control custom-input" name="qualification" required
+                    placeholder="Master's in Computer Science">
+            </div>
+
+            <!-- Passwords -->
+            <div class="row">
+                <div class="col-md-6 mb-3 position-relative">
+                    <label class="form-label">Password *</label>
+                    <input type="password" id="password" class="form-control custom-input" name="password1" required
+                        placeholder="Enter password">
+                    <i class='bx bx-show eye-icon' id="togglePass"></i>
+                </div>
+
+                <div class="col-md-6 mb-3 position-relative">
+                    <label class="form-label">Confirm Password *</label>
+                    <input type="password" id="password2" class="form-control custom-input" name="password2" required
+                        placeholder="Confirm password">
+                    <i class='bx bx-show eye-icon' id="togglePass2"></i>
+                </div>
+            </div>
+
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+            {% endif %}
+
+            <!-- Terms and Conditions -->
+            <div class="terms-container">
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="termsCheckbox" name="terms">
+                    <label for="termsCheckbox" class="terms-label">
+                        I agree to the <a href="#" onclick="showTermsModal(event)">Terms and Conditions</a> and
+                        <a href="#" onclick="showPrivacyModal(event)">Privacy Policy</a>
+                    </label>
+                </div>
+                <div class="terms-error" id="termsError">
+                    <i class="fas fa-exclamation-circle"></i> You must accept the terms and conditions to register
+                </div>
+            </div>
+
+            <button type="submit" class="register-btn" id="submitBtn">
+                <i class="fas fa-user-plus"></i> Register
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small>Already have an account? <a href="{% url 'login' %}">Login here</a></small>
+        </div>
+    </div>
+</div>
+
+<!-- Email Verification Modal -->
+<div class="modal" id="emailVerifyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-envelope-open-text"></i> Email Verification
+                </h5>
+                <button type="button" class="btn-close btn-close-white" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <!-- Sending Phase -->
+                <div id="sendingPhase">
+                    <div class="spinner-border">
+                        <span class="visually-hidden">Sending...</span>
+                    </div>
+                    <p class="fw-bold mt-3">Sending verification email...</p>
+                    <p class="text-muted" id="sendingEmail"></p>
+                </div>
+
+                <!-- Waiting Phase -->
+                <div id="waitingPhase" style="display:none;">
+                    <i class="fas fa-envelope fa-4x text-success mb-3" style="display:block; margin-bottom:1rem;"></i>
+                    <h5>Check Your Email!</h5>
+                    <p>We've sent a verification link to:</p>
+                    <p class="fw-bold text-success" id="verificationEmail"></p>
+                    <p class="text-muted">Click the link in the email to verify your account.</p>
+                    <hr style="margin: 1.5rem 0; border: 1px solid #e0e0e0;">
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-clock"></i> Waiting... <span id="timeElapsed">0</span>s
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Success Phase -->
+                <div id="successPhase" style="display:none;">
+                    <i class="fas fa-check-circle verification-success"></i>
+                    <h5 class="text-success mt-3">Email Verified!</h5>
+                    <p class="text-muted">You can now complete your registration</p>
+                </div>
+
+                <!-- Error Phase -->
+                <div id="errorPhase" style="display:none;">
+                    <i class="fas fa-exclamation-triangle fa-4x text-danger"
+                        style="display:block; margin-bottom:1rem;"></i>
+                    <h5 class="text-danger">Verification Failed</h5>
+                    <p id="errorMessage" class="text-muted"></p>
+                    <button type="button" class="btn btn-success" id="retryBtn"
+                        style="background: #28a745; margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/teacher_register.js' %}"></script>
+{% endblock %}

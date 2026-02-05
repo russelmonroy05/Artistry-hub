@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}<title>TPES</title>{% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href='https://cdn.boxicons.com/3.0.6/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>
+    <link href='https://cdn.boxicons.com/3.0.6/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="logo-section">
+            <img src="{% static 'images/osme_logo.jpg' %}" class="school-logo" alt="Osmeña Colleges Logo">
+            <span class="school-name">{% block schoolname %}TPESCCS{% endblock schoolname %}</span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="#teacher">Faculties</a></li>
+            <li><a href="#about">About CCS</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- add block content -->
+    {% block content %}
+
+    <section class="home" id="home">
+        <h1><span class="typing-text"></span></h1>
+        <p>Streamline faculty assessment and improve educational quality with our comprehensive evaluation platform</p>
+        <div class="home-buttons">
+            <a href="{% url 'login' %}" class="home-btn btn-primary">Evaluate your teacher</a>
+
+        </div>
+    </section>
+    <section class="features">
+        <div class="features-header">
+            <h2>Powerful Features for Effective Evaluation</h2>
+            <p>Everything you need to conduct fair, comprehensive, and insightful teacher performance evaluations.</p>
+        </div>
+
+        <div class="features-grid">
+            <!-- Feature 1: Comprehensive Analytics -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Comprehensive Analytics</h3>
+                <p>Track teaching performance with detailed metrics, visualization tools, and trend analysis across
+                    semesters.</p>
+            </div>
+
+            <!-- Feature 2: Student Feedback -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Student Feedback</h3>
+                <p>Collect anonymous student evaluations with customizable surveys and rating systems.</p>
+            </div>
+
+            <!-- Feature 3: Automated Reports -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Automated Reports</h3>
+                <p>Generate professional performance reports with insights and recommendations for improvement.</p>
+            </div>
+
+            <!-- Feature 4: Performance Tracking -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Performance Tracking</h3>
+                <p>Monitor teaching effectiveness over time with historical data and comparative analysis.</p>
+            </div>
+
+            <!-- Feature 5: Secure & Confidential -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure & Confidential</h3>
+                <p>Enterprise-grade security ensuring data privacy and compliance with educational standards.</p>
+            </div>
+
+            <!-- Feature 6: Time-Efficient -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Time-Efficient</h3>
+                <p>Streamlined evaluation process that saves time for both evaluators and instructors.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="how_it_works" id="how_it_works">
+        <h2>How It Works</h2>
+        <p>Our platform makes evaluating teachers simple and efficient</p>
+        <div class="steps">
+            <div class="step">
+                <span class="step-number">1</span>
+                <h3>Log In</h3>
+                <p>Access your account to begin the evaluation process.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <h3>Select Teacher</h3>
+                <p>Choose the teacher you want to evaluate from the directory.</p>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <h3>Complete Evaluation</h3>
+                <p>Fill out the evaluation form with your feedback.</p>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section class="about" id="about">
+        <h2>About College of Computer Science</h2>
+        <p>Osmeña Colleges is committed to quality education and service since 1948.</p>
+
+        <div class="about-content">
+            <!-- Cards Section -->
+            <div class="about-cards">
+                <div class="about-card">
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Our History</h3>
+                    <p>Founded in 1948, Osmeña Colleges has a rich history of academic excellence and community service.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>To provide quality education that empowers students to become responsible and productive
+                        citizens.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="card-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Our Vision</h3>
+                    <p>To be a leading educational institution recognized for excellence in teaching, research, and
+                        community engagement.</p>
+                </div>
+            </div>
+
+
+            <div class="about-logo">
+                <div class="logo-container">
+                    <img src="{% static 'images/osme.jpg' %}" alt="Osmeña Colleges Logo" class="logo-image">
+                    <div class="logo-text">
+                        <h4>Osmeña Colleges</h4>
+                        <p>Est. 1948</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+
+
+    <footer>
+        <div class="footer-container">
+
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="footer-logo-text">
+                        <h3>Osmeña Colleges</h3>
+                        <p>Teacher Evaluation System</p>
+                    </div>
+                </div>
+                <p>Empowering educational excellence through comprehensive teacher performance evaluation.</p>
+            </div>
+
+            <!-- Product Column -->
+            <div class="footer-column">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how_it_works">How It Works</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources Column -->
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#documentation">Documentation</a></li>
+                    <li><a href="#support">Support</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="footer-column">
+                <h4>Contact</h4>
+                <div class="footer-contact">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:info@osmena.edu.ph">info@osmena.edu.ph</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+63(32)1234567">+63 (32) 123-4567</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Osmeña Colleges, Cebu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                © 2025 Osmeña Colleges. All rights reserved.
+            </div>
+            <div class="social-links">
+                <a href="#facebook" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#twitter" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#linkedin" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="{% static 'js/home.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+
+</body>
+
+</html>

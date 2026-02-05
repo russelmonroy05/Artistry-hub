@@ -1,0 +1,127 @@
+{% if students %}
+<div class="table-responsive">
+    <table class="table table-hover table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Stu_ID</th>
+                <th>Department</th>
+                <th>Year</th>
+                <th>Course</th>
+                <th>Status</th>
+                <th>COR</th>
+                <th>Subjects</th>
+                <th>Evaluations</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+
+                <td>
+                    {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" 
+                            alt="{{ student.user.get_full_name|default:student.user.username }}"
+                            class="rounded-circle"
+                            style="width: 40px; height: 40px; object-fit: cover;">
+                    {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ student.user.get_full_name|default:student.user.username|urlencode }}&background=667eea&color=fff&size=40"
+                            alt="{{ student.user.get_full_name|default:student.user.username }}"
+                            class="rounded-circle">
+                    {% endif %}
+                </td>
+
+            
+                <td>
+                    <strong>{{ student.user.get_full_name|default:student.user.username }}</strong>
+                </td>
+
+               
+                <td>{{ student.student_id_number }}</td>
+
+                
+                <td>{{ student.department.name }}</td>
+
+                
+                <td>{{ student.get_year_level_display }}</td>
+
+                
+                <td>{{ student.course }}</td>
+
+                
+                <td>
+                    {% if student.user.is_pending %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-clock"></i> Pending
+                        </span>
+                    {% else %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-check-circle"></i> Approved
+                        </span>
+                    {% endif %}
+                </td>
+
+              
+                <td>
+                    {% if student.certificate_of_registration %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-file-check"></i> Yes
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-file-times"></i> No
+                        </span>
+                    {% endif %}
+                </td>
+
+                <!-- Subjects Count -->
+                <td>
+                    <span class="badge bg-primary">
+                        {{ student.subjects_count|default:0 }}
+                    </span>
+                </td>
+
+                <!-- Evaluations Count -->
+                <td>
+                    <span class="badge bg-info">
+                        {{ student.evaluations_count|default:0 }}
+                    </span>
+                </td>
+
+                <!-- Actions -->
+                <td>
+                    <div class="btn-group" role="group">
+                        {% if student.user.is_pending %}
+                            <button type="button" 
+                                    class="btn btn-success btn-sm approve-student-btn" 
+                                    data-user-id="{{ student.user.id }}"
+                                    data-approve-url="{% url 'approve_student' student.user.id %}"
+                                    title="Approve Student"
+                                    onclick="window._onApproveBtnClick && window._onApproveBtnClick(event, {{ student.user.id }});">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        {% endif %}
+
+                        {% if student.certificate_of_registration %}
+                            <a href="{% url 'view_student_cor' student.id %}" 
+                               class="btn btn-primary btn-sm" 
+                               title="View COR & Assign Subjects">
+                                <i class="fas fa-file-pdf" style="color: black;"></i>
+                            </a>
+                        {% endif %}
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+    <p class="text-muted">No students found matching your filters.</p>
+</div>
+{% endif %}

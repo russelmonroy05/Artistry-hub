@@ -1,0 +1,105 @@
+{% extends 'home.html' %}
+
+{% block title %}Manage Students - Admin{% endblock %}
+
+{% block content %}
+<style>
+    footer{
+        display: none;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+<div class="container py-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-user-graduate"></i> Manage Students</h4>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-light btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {% if students %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Year Level</th>
+                            <th>Evaluations</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.student_id }}</td>
+                            <td>{{ student.user.first_name }} {{ student.user.last_name }}</td>
+                            <td>{{ student.user.username }}</td>
+                            <td>{{ student.user.email }}</td>
+                            <td>{{ student.course }}</td>
+                            <td>Year {{ student.year_level }}</td>
+                            <td>
+                                <span class="badge bg-info">{{ student.my_evaluations.count }}</span>
+                            </td>
+                            <td>
+                                {% if student.user.is_pending %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                                <a href="{% url 'approve_student' student.user.id %}"
+                                    class="btn btn-sm btn-success ms-2">
+                                    <i class="fas fa-check"></i> Approve
+                                </a>
+                                {% else %}
+                                <span class="badge bg-success">Active</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+                <p>No students registered yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete student <strong id="deleteUsername"></strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(userId, username) {
+        document.getElementById('deleteUsername').textContent = username;
+        document.getElementById('confirmDeleteBtn').href = `/admin-dashboard/delete-user/${userId}/`;
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+</script>
+{% endblock %}

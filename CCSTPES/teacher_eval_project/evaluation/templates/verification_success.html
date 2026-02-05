@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Verified{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body p-5">
+                    <div class="text-success mb-4">
+                        <i class="fas fa-check-circle fa-5x"></i>
+                    </div>
+                    <h2>Email Verified Successfully!</h2>
+                    <p class="lead">Your account has been activated.</p>
+                    <p class="text-muted">You can now login to access your dashboard.</p>
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-3">
+                        <i class="fas fa-sign-in-alt"></i> Go to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        // Try to close the window/tab. Browsers only allow window.close()
+        // for windows that were opened by script. This is a best-effort.
+        function tryClose() {
+            try {
+                // Some browsers block close unless window was opened by script.
+                window.open('', '_self');
+                window.close();
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        // Attempt to close after a short delay so the user sees confirmation.
+        setTimeout(tryClose, 700);
+
+        // If the window didn't close (most email-client-opened tabs),
+        // redirect the user to the provided fallback URL after 1.5s.
+        setTimeout(function () {
+            var fallback = '{{ redirect_url|default:"/" }}';
+            if (fallback) {
+                window.location.href = fallback;
+            }
+        }, 1500);
+    })();
+</script>
+{% endblock %}

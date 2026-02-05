@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200">
+  <defs>
+    <linearGradient id="pg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#8f6bff"/>
+      <stop offset="100%" stop-color="#a66bff"/>
+    </linearGradient>
+    <style>
+      .bg{fill:url(#pg)}
+      .soft{fill:#ffffff;opacity:0.06}
+      .detail{fill:#fff;opacity:0.9}
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" rx="16" class="bg"/>
+
+  <!-- decorative blobs -->
+  <circle cx="520" cy="30" r="10" class="soft"/>
+  <circle cx="470" cy="20" r="6" class="soft"/>
+
+  <!-- stylized graduation cap -->
+  <g transform="translate(410,28) scale(0.9)">
+    <polygon points="0,12 48,0 100,12 48,36" fill="#fff" opacity="0.18"/>
+    <rect x="44" y="34" width="8" height="18" rx="2" fill="#fff" opacity="0.12"/>
+  </g>
+
+  <!-- diploma -->
+  <g transform="translate(360,54)">
+    <rect x="0" y="12" width="80" height="36" rx="6" class="soft"/>
+    <circle cx="62" cy="30" r="6" class="soft"/>
+  </g>
+
+  <!-- backpack -->
+  <g transform="translate(494,86) scale(0.9)">
+    <rect x="0" y="0" width="80" height="66" rx="10" class="soft" />
+    <rect x="10" y="10" width="60" height="46" rx="8" fill="#fff" opacity="0.03"/>
+  </g>
+
+  <!-- portrait silhouette block (blurred) -->
+  <g transform="translate(430,40)">
+    <rect x="0" y="0" width="120" height="120" rx="12" fill="#ffffff" opacity="0.12"/>
+    <!-- subtle face placeholder -->
+    <circle cx="70" cy="45" r="20" fill="#fff" opacity="0.12"/>
+    <rect x="50" y="70" width="40" height="32" rx="8" fill="#fff" opacity="0.06"/>
+  </g>
+
+</svg>

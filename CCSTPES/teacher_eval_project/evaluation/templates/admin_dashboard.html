@@ -1,0 +1,2631 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Teacher Evaluation System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="Screen">
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-links">
+        <div class="sidebar-item">
+            <a href="#" data-section="dashboard">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+        </div>
+        <div class="sidebar-item">
+          <a href="#" data-section="students">
+            <i class="fas fa-user-graduate"></i> Manage Students
+          </a>
+        </div>
+        <div class="sidebar-item">
+          <a href="#" data-section="teachers">
+            <i class="fas fa-chalkboard-teacher"></i> Manage Teachers
+          </a>
+        </div>
+        <div class="sidebar-item">
+          <a href="#" data-section="subjects">
+            <i class="fas fa-book"></i> Manage Subjects
+          </a>
+        </div>
+        <div class="sidebar-item">
+          <a href="/admin/" target="_blank">
+            <i class="fas fa-cog"></i> Django Admin
+          </a>
+        </div>
+        <div class="sidebar-item">
+          <a href="#" data-section="evaluation-results">
+            <i class="fas fa-file-alt"></i> Generate Reports
+          </a>
+        </div>
+        <div class="sidebar-item">
+          <a href="#" data-section="reports">
+            <i class="fas fa-chart-line"></i> Evaluation Settings
+          </a>
+        </div>
+        <div class="sidebar-item b">
+          <a href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+<style>
+    .reports{
+        position: relative;
+        max-width: 1200px;
+        left: 60px;
+    }.reports-card{
+        position: relative;
+        bottom: 70px;
+    }
+    @media (max-width: 768px) {
+        .reports{
+            margin-left: -55px !important;
+        }
+    }
+</style>
+
+<section id="subjects" class="page-section">
+    <div class="container-fluid py-5" style="margin-left: 270px; max-width: 1220px;">
+        <div class="card mb-4" style="background-color: transparent; border: none;">
+            <div class="card-body">
+                <h2><i class="fas fa-user-shield text-danger"></i><strong> System Administrator</strong></h2>
+                <small class="text-muted admin"><strong>Subject Management</strong></small>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <h4 class="mb-0">
+                    <i class="fas fa-book text-primary"></i> Subjects
+                </h4>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <!-- Add Subject Button -->
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSubjectModal">
+                        <i class="fas fa-plus"></i> Add New Subject
+                    </button>
+                    
+                    <!-- Filter Button -->
+                    <button class="btn btn-outline-primary" type="button" id="subjectFilterToggleBtn">
+                        <i class="fas fa-filter"></i> Filter Subjects
+                    </button>
+
+                    <!-- Stats Badges -->
+                    <span class="badge bg-info">Total: <span id="subjectTotalCount">{{ subjects.count }}</span></span>
+                    <span class="badge bg-success">Active: <span id="subjectActiveCount">{{ subjects.count }}</span></span>
+                </div>
+            </div>
+
+            <!-- Filter Panel -->
+            <div id="subjectFilterPanel" class="card-body border-bottom bg-light" style="display: none;">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="subjectDepartmentFilter" class="form-label fw-bold">
+                            <i class="fas fa-building"></i> Department
+                        </label>
+                        <select class="form-select" id="subjectDepartmentFilter">
+                            <option value="">All Departments</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="subjectYearLevelFilter" class="form-label fw-bold">
+                            <i class="fas fa-graduation-cap"></i> Year Level
+                        </label>
+                        <select class="form-select" id="subjectYearLevelFilter">
+                            <option value="">All Years</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="subjectSearchFilter" class="form-label fw-bold">
+                            <i class="fas fa-search"></i> Search
+                        </label>
+                        <input type="text" class="form-control" id="subjectSearchFilter" placeholder="Code or Name">
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="btn btn-secondary" id="clearSubjectFilters">
+                            <i class="fas fa-undo"></i> Clear All Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subjects Table -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="subjectsTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Code</th>
+                                <th>Subject Name</th>
+                                <th>Department</th>
+                                <th>Year Level</th>
+                                <th>Units</th>
+                                <th>Teachers</th>
+                                <th>Students</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for subject in subjects %}
+                            <tr data-department-id="{{ subject.department.id }}" data-year-level="{{ subject.year_level }}">
+                                <td>
+                                    <span class="badge bg-primary">{{ subject.code }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ subject.name }}</strong><br>
+                                    <small class="text-muted">{{ subject.description|truncatewords:10 }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ subject.department.code }}</span>
+                                </td>
+                                <td>{{ subject.get_year_level_display }}</td>
+                                <td>{{ subject.units }} unit{{ subject.units|pluralize }}</td>
+                                <td>
+                                    <span class="badge bg-success">
+                                        {{ subject.teachers.count }} teacher{{ subject.teachers.count|pluralize }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        {{ subject.assigned_students.count }} student{{ subject.assigned_students.count|pluralize }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <!-- View Button -->
+                                        <button class="btn btn-info" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#viewSubjectModal{{ subject.id }}"
+                                                title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        
+                                        <!-- Edit Button -->
+                                        <button class="btn btn-warning" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#editSubjectModal{{ subject.id }}"
+                                                title="Edit Subject">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        
+                                        <!-- Delete Button -->
+                                        <button class="btn btn-danger" 
+                                                onclick="confirmDeleteSubject({{ subject.id }}, '{{ subject.code }} - {{ subject.name }}')"
+                                                title="Delete Subject">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center text-muted py-4">
+                                    <i class="fas fa-book fa-3x mb-3"></i>
+                                    <p>No subjects found.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Subject Modal -->
+<div class="modal fade" id="addSubjectModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus"></i> Add New Subject
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'add_subject' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Subject Code *</label>
+                            <input type="text" class="form-control" name="code" 
+                                   placeholder="e.g., CS101" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Subject Name *</label>
+                            <input type="text" class="form-control" name="name" 
+                                   placeholder="e.g., Introduction to Programming" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department *</label>
+                            <select class="form-select" name="department" required>
+                                <option value="">Select Department</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Year Level *</label>
+                            <select class="form-select" name="year_level" required>
+                                <option value="">Select Year Level</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Units/Credits *</label>
+                            <input type="number" class="form-control" name="units" 
+                                   min="1" max="10" value="3" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="3" 
+                                      placeholder="Brief description of the subject"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Add Subject
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Subject Details Modals (One for each subject) -->
+{% for subject in subjects %}
+<div class="modal fade" id="viewSubjectModal{{ subject.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-book"></i> Subject Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="30%">Subject Code</th>
+                                <td><span class="badge bg-primary fs-6">{{ subject.code }}</span></td>
+                            </tr>
+                            <tr>
+                                <th>Subject Name</th>
+                                <td><strong>{{ subject.name }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Department</th>
+                                <td>{{ subject.department.name }} ({{ subject.department.code }})</td>
+                            </tr>
+                            <tr>
+                                <th>Year Level</th>
+                                <td>{{ subject.get_year_level_display }}</td>
+                            </tr>
+                            <tr>
+                                <th>Units/Credits</th>
+                                <td>{{ subject.units }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ subject.description|default:"No description provided" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Teachers Assigned</th>
+                                <td>
+                                    {% if subject.teachers.all %}
+                                        <ul class="mb-0">
+                                            {% for teacher in subject.teachers.all %}
+                                                <li>{{ teacher.user.get_full_name }} ({{ teacher.employee_id }})</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <span class="text-muted">No teachers assigned</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Students Enrolled</th>
+                                <td>
+                                    <span class="badge bg-warning text-dark">
+                                        {{ subject.students.count }} student{{ subject.students.count|pluralize }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Subject Modal -->
+<div class="modal fade" id="editSubjectModal{{ subject.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit"></i> Edit Subject
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'edit_subject' subject.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Subject Code *</label>
+                            <input type="text" class="form-control" name="code" 
+                                   value="{{ subject.code }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Subject Name *</label>
+                            <input type="text" class="form-control" name="name" 
+                                   value="{{ subject.name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department *</label>
+                            <select class="form-select" name="department" required>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}" 
+                                            {% if subject.department.id == dept.id %}selected{% endif %}>
+                                        {{ dept.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Year Level *</label>
+                            <select class="form-select" name="year_level" required>
+                                <option value="1" {% if subject.year_level == 1 %}selected{% endif %}>1st Year</option>
+                                <option value="2" {% if subject.year_level == 2 %}selected{% endif %}>2nd Year</option>
+                                <option value="3" {% if subject.year_level == 3 %}selected{% endif %}>3rd Year</option>
+                                <option value="4" {% if subject.year_level == 4 %}selected{% endif %}>4th Year</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Units/Credits *</label>
+                            <input type="number" class="form-control" name="units" 
+                                   value="{{ subject.units }}" min="1" max="10" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="description" rows="3">{{ subject.description|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Update Subject
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete Subject Confirmation Modal -->
+<div class="modal fade" id="deleteSubjectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete subject <strong id="deleteSubjectName"></strong>?</p>
+                <p class="text-danger">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    This action cannot be undone! All associated data will be removed.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDeleteSubjectBtn" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Subject
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Subject management specific styles */
+#subjectsTable tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+@media (max-width: 768px) {
+    .teacherSec {
+        margin-left: 0 !important;
+        max-width: 100% !important;
+    }
+}
+</style>
+
+
+
+<section id="teachers" class="page-section">
+    <div class="container-fluid py-5 teacherSec " style="margin-left: 270px; max-width: 1220px;">
+        <div class="card mb-4" style="background-color: transparent; border: none;">
+            <div class="card-body">
+                <h2><i class="fas fa-user-shield text-danger"></i><strong> System Administrator</strong></h2>
+                <small class="text-muted admin"><strong>Teacher Management</strong></small>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <h4 class="mb-0">
+                    <i></i>
+                </h4>
+                <div class="d-flex gap-2 align-items-center flex-wrap">
+                    <!-- Add Teacher Button -->
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+                        <i class="fas fa-plus"></i> Add New Teacher
+                    </button>
+                    
+                    <!-- Filter Button -->
+                    <button class="btn btn-outline-primary" type="button" id="teacherFilterToggleBtn">
+                        <i class="fas fa-filter"></i> Filter Teachers
+                    </button>
+
+                    <!-- Stats Badges -->
+                    <span class="badge bg-info">Total: <span id="teacherTotalCount">{{ teachers.count }}</span></span>
+                    <span class="badge bg-success">Active: <span id="teacherActiveCount">{{ teachers.count }}</span></span>
+                </div>
+            </div>
+
+            <!-- Filter Panel -->
+            <div id="teacherFilterPanel" class="card-body border-bottom bg-light" style="display: none;">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="teacherDepartmentFilter" class="form-label fw-bold">
+                            <i class="fas fa-building"></i> Department
+                        </label>
+                        <select class="form-select" id="teacherDepartmentFilter">
+                            <option value="">All Departments</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="teacherSearchFilter" class="form-label fw-bold">
+                            <i class="fas fa-search"></i> Search
+                        </label>
+                        <input type="text" class="form-control" id="teacherSearchFilter" placeholder="Name or Employee ID">
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="btn btn-secondary" id="clearTeacherFilters">
+                            <i class="fas fa-undo"></i> Clear All Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teachers Table -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="teachersTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Subjects</th>
+                                <th>Experience</th>
+                                <th>Rating</th>
+                                <th>Evaluations</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for teacher in teachers %}
+                            <tr>
+                                <td>
+                                    {% if teacher.profile_picture %}
+                                        <img src="{{ teacher.profile_picture.url }}" 
+                                             alt="{{ teacher.user.get_full_name }}" 
+                                             class="rounded-circle"
+                                             style="width: 40px; height: 40px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" 
+                                             style="width: 40px; height: 40px;">
+                                            {{ teacher.user.first_name|first }}{{ teacher.user.last_name|first }}
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ teacher.user.get_full_name }}</strong><br>
+                                    <small class="text-muted">{{ teacher.user.email }}</small>
+                                </td>
+                                <td>{{ teacher.employee_id }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ teacher.department.code }}</span>
+                                </td>
+                                <td>
+                                    <small>{{ teacher.subjects.count }} subject{{ teacher.subjects.count|pluralize }}</small>
+                                </td>
+                                <td>{{ teacher.experience_years }} years</td>
+                                <td>
+                                    {% if teacher.get_average_rating > 0 %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-star"></i> {{ teacher.get_average_rating|floatformat:2 }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">N/A</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">{{ teacher.evaluations.count }}</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <!-- View Button -->
+                                        <button class="btn btn-info" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#viewTeacherModal{{ teacher.id }}"
+                                                title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        
+                                        <!-- Edit Button -->
+                                        <button class="btn btn-warning" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#editTeacherModal{{ teacher.id }}"
+                                                title="Edit Teacher">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        
+                                        <!-- Assign Subjects Button -->
+                                        <button class="btn btn-primary" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#assignSubjectsModal{{ teacher.id }}"
+                                                title="Assign Subjects">
+                                            <i class="fas fa-book"></i>
+                                        </button>
+                                        
+                                        <!-- View Report Button -->
+                                        <a href="{% url 'reports:teacher_report_pdf' teacher.id %}" 
+                                           class="btn btn-success" 
+                                           title="Download Report"
+                                           download>
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                        
+                                        <!-- Delete Button -->
+                                        <!-- <button class="btn btn-danger"
+                                            onclick="confirmDeleteTeacher({{ teacher.user.id }}, '{{ teacher.user.get_full_name }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button> -->
+
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="9" class="text-center text-muted py-4">
+                                    <i class="fas fa-users fa-3x mb-3"></i>
+                                    <p>No teachers found.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add Teacher Modal -->
+<div class="modal fade" id="addTeacherModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user-plus"></i> Add New Teacher
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'add_teacher' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Username *</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Password *</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Employee ID *</label>
+                            <input type="text" class="form-control" name="employee_id" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department *</label>
+                            <select class="form-select" name="department" required>
+                                <option value="">Select Department</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Experience (Years) *</label>
+                            <input type="number" class="form-control" name="experience_years" min="0" value="0" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Qualification *</label>
+                            <input type="text" class="form-control" name="qualification" 
+                                   placeholder="e.g., Master's in Computer Science" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" name="profile_picture" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-control" name="bio" rows="3" 
+                                      placeholder="Brief bio about the teacher"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Add Teacher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- View Teacher Details Modals (One for each teacher) -->
+{% for teacher in teachers %}
+<div class="modal fade" id="viewTeacherModal{{ teacher.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-user"></i> Teacher Details
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        {% if teacher.profile_picture %}
+                            <img src="{{ teacher.profile_picture.url }}" 
+                                 alt="{{ teacher.user.get_full_name }}" 
+                                 class="img-fluid rounded-circle mb-3"
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto mb-3" 
+                                 style="width: 150px; height: 150px; font-size: 48px;">
+                                {{ teacher.user.first_name|first }}{{ teacher.user.last_name|first }}
+                            </div>
+                        {% endif %}
+                        <h5>{{ teacher.user.get_full_name }}</h5>
+                        <p class="text-muted">{{ teacher.employee_id }}</p>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="40%">Email</th>
+                                <td>{{ teacher.user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th>Phone</th>
+                                <td>{{ teacher.user.phone|default:"N/A" }}</td>
+                            </tr>
+                            <tr>
+                                <th>Department</th>
+                                <td>{{ teacher.department }}</td>
+                            </tr>
+                            <tr>
+                                <th>Qualification</th>
+                                <td>{{ teacher.qualification }}</td>
+                            </tr>
+                            <tr>
+                                <th>Experience</th>
+                                <td>{{ teacher.experience_years }} years</td>
+                            </tr>
+                            <tr>
+                                <th>Average Rating</th>
+                                <td>
+                                    {% if teacher.get_average_rating > 0 %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-star"></i> {{ teacher.get_average_rating|floatformat:2 }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">No ratings yet</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Total Evaluations</th>
+                                <td>{{ teacher.evaluations.count }}</td>
+                            </tr>
+                            <tr>
+                                <th>Subjects Teaching</th>
+                                <td>
+                                    {% if teacher.subjects.all %}
+                                        {% for subject in teacher.subjects.all %}
+                                            <span class="badge bg-primary">{{ subject.code }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span class="text-muted">No subjects assigned</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                        {% if teacher.user.bio %}
+                        <div class="mt-3">
+                            <h6>Bio:</h6>
+                            <p>{{ teacher.user.bio }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'reports:teacher_report_pdf' teacher.id %}" 
+                   class="btn btn-success" download>
+                    <i class="fas fa-download"></i> Download Report
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Teacher Modal -->
+<div class="modal fade" id="editTeacherModal{{ teacher.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit"></i> Edit Teacher
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- RIGHT -->
+               <form method="POST" action="{% url 'edit_teacher' teacher.id %}" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" name="first_name" 
+                                   value="{{ teacher.user.first_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" name="last_name" 
+                                   value="{{ teacher.user.last_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" name="email" 
+                                   value="{{ teacher.user.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Employee ID *</label>
+                            <input type="text" class="form-control" name="employee_id" 
+                                   value="{{ teacher.employee_id }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Department *</label>
+                            <select class="form-select" name="department" required>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}" 
+                                            {% if teacher.department.id == dept.id %}selected{% endif %}>
+                                        {{ dept.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Experience (Years) *</label>
+                            <input type="number" class="form-control" name="experience_years" 
+                                   value="{{ teacher.experience_years }}" min="0" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Qualification *</label>
+                            <input type="text" class="form-control" name="qualification" 
+                                   value="{{ teacher.qualification }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" 
+                                   value="{{ teacher.user.phone|default:'' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" name="profile_picture" accept="image/*">
+                            {% if teacher.profile_picture %}
+                                <small class="text-muted">Current: {{ teacher.profile_picture.name }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Bio</label>
+                            <textarea class="form-control" name="bio" rows="3">{{ teacher.user.bio|default:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save"></i> Update Teacher
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Assign Subjects Modal -->
+<div class="modal fade" id="assignSubjectsModal{{ teacher.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-book"></i> Assign Subjects
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{% url 'assign_subjects' teacher.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p><strong>Teacher:</strong> {{ teacher.user.get_full_name }}</p>
+                    <p><strong>Department:</strong> {{ teacher.department }}</p>
+                    <hr>
+                    <label class="form-label">Select Subjects:</label>
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        {% for subject in teacher.department.subjects.all %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="subjects" 
+                                   value="{{ subject.id }}" id="subject{{ teacher.id }}_{{ subject.id }}"
+                                   {% if subject in teacher.subjects.all %}checked{% endif %}>
+                            <label class="form-check-label" for="subject{{ teacher.id }}_{{ subject.id }}">
+                                {{ subject.code }} - {{ subject.name }}
+                                <small class="text-muted">({{ subject.get_year_level_display }})</small>
+                            </label>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted">No subjects available in this department.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Subjects
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete Teacher Confirmation Modal -->
+<div class="modal fade" id="deleteTeacherModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete teacher <strong id="deleteTeacherName"></strong>?</p>
+                <p class="text-danger">
+                    <i class="fas fa-exclamation-triangle"></i> 
+                    This action cannot be undone! All associated data will be removed.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="#" id="confirmDeleteTeacherBtn" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Teacher
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Teacher management specific styles */
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+#teachersTable img, #teachersTable .rounded-circle {
+    border: 2px solid #dee2e6;
+}
+
+/* Fix modal backdrop issue */
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+
+.modal {
+    z-index: 1050 !important;
+}
+
+.modal-dialog {
+    z-index: 1060 !important;
+}
+
+/* Ensure modal content is clickable */
+.modal-content {
+    position: relative;
+    z-index: 1070 !important;
+}
+
+</style>
+
+
+<section id="evaluation-results" class="page-section">
+    <div class="container py-5 reports">
+        <div class="card mb-5 card-body-small">
+            <div class="card-body">
+                <h2><i class="fas fa-user-shield text-danger"></i><strong> System Administrator</strong></h2>
+                <small class="text-muted admin"><strong>Generate Reports</strong></small>
+            </div>
+        </div>
+
+        <!-- Generate Reports Section -->
+        <div class="card mb-4 reports-card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-download"></i> Generate Reports
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+
+                    <!-- Department Reports -->
+                    <div class="col-md-6">
+                        <div class="card border-primary h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">
+                                    <i class="fas fa-building"></i> Department Reports
+                                </h6>
+                                <p class="card-text small text-muted flex-grow-1">
+                                    Generate comprehensive reports by department
+                                </p>
+                                
+                                {% if departments %}
+                                    <div class="department-list" style="max-height: 200px; overflow-y: auto;">
+                                        {% for dept in departments %}
+                                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                            <div class="flex-grow-1">
+                                                <strong>{{ dept.code }}</strong> - {{ dept.name }}<br>
+                                                <small class="text-muted">
+                                                    {{ dept.get_teacher_count }} teachers
+                                                </small>
+                                            </div>
+                                            <a href="{% url 'reports:department_report_pdf' dept.id %}" 
+                                               class="btn btn-primary btn-sm"
+                                               title="Download department report"
+                                               download>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-info mb-0">
+                                        <small>No departments available</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Individual Teacher Reports -->
+                    <div class="col-md-6">
+                        <div class="card border-success h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">
+                                    <i class="fas fa-user-tie"></i> Individual Teacher Reports
+                                </h6>
+                                <p class="card-text small text-muted flex-grow-1">
+                                    Download evaluation report for specific teacher
+                                </p>
+                                
+                                {% if teachers %}
+                                    <div class="teacher-list" style="max-height: 200px; overflow-y: auto;">
+                                        {% for teacher in teachers|slice:":10" %}
+                                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                            <div class="flex-grow-1">
+                                                <strong>{{ teacher.user.get_full_name }}</strong><br>
+                                                <small class="text-muted">{{ teacher.department.code }} - {{ teacher.employee_id }}</small>
+                                            </div>
+                                            <a href="{% url 'reports:teacher_report_pdf' teacher.id %}" 
+                                               class="btn btn-success btn-sm"
+                                               title="Download teacher report"
+                                               download>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    {% if teachers.count > 10 %}
+                                    <small class="text-muted mt-2 d-block text-center">
+                                        Showing 10 of {{ teachers.count }} teachers
+                                    </small>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="alert alert-info mb-0">
+                                        <small>No teachers available</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Evaluation Details -->
+                    <div class="col-md-6">
+                        <div class="card border-warning h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">
+                                    <i class="fas fa-file-alt"></i> Recent Evaluation Details
+                                </h6>
+                                <p class="card-text small text-muted flex-grow-1">
+                                    Download detailed reports for recent evaluations
+                                </p>
+                                
+                                {% if recent_evaluations %}
+                                    <div class="evaluation-list" style="max-height: 200px; overflow-y: auto;">
+                                        {% for evaluation in recent_evaluations %}
+                                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                            <div class="flex-grow-1">
+                                                <strong>{{ evaluation.student.user.get_full_name }}</strong><br>
+                                                <small class="text-muted">
+                                                    {{ evaluation.teacher.user.get_full_name }} - {{ evaluation.subject.code }}
+                                                </small>
+                                            </div>
+                                            <a href="{% url 'reports:evaluation_detail_pdf' evaluation.id %}" 
+                                               class="btn btn-warning btn-sm"
+                                               title="Download evaluation detail"
+                                               download>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-info mb-0">
+                                        <small>No evaluations available</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Performing Teachers -->
+                    <div class="col-md-6">
+                        <div class="card border-danger h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">
+                                    <i class="fas fa-trophy"></i> Top Performing Teachers
+                                </h6>
+                                <p class="card-text small text-muted flex-grow-1">
+                                    Download reports for highest-rated teachers
+                                </p>
+                                
+                                {% if top_teachers %}
+                                    <div class="teacher-list" style="max-height: 200px; overflow-y: auto;">
+                                        {% for item in top_teachers %}
+                                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                            <div class="flex-grow-1">
+                                                <strong>{{ item.teacher.user.get_full_name }}</strong>
+                                                <span class="badge bg-success ms-2">{{ item.rating }}</span><br>
+                                                <small class="text-muted">
+                                                    {{ item.teacher.department.code }} - {{ item.total_evals }} evaluations
+                                                </small>
+                                            </div>
+                                            <a href="{% url 'reports:teacher_report_pdf' item.teacher.id %}" 
+                                               class="btn btn-danger btn-sm"
+                                               title="Download teacher report"
+                                               download>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-info mb-0">
+                                        <small>No evaluation data available yet</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Help Text -->
+                <div class="alert alert-info mt-3 mb-0" role="alert">
+                    <small>
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Admin Reports:</strong> Download department summaries, individual teacher reports, 
+                        or detailed evaluation data. All reports are generated in PDF format.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section id="dashboard" class="page-section active-section">
+    <div class="container py-5">
+    <div class="card mb-5 card-body-small">
+      <div class="card-body">
+        <h2><i class="fas fa-user-shield text-danger"></i><strong> System Administrator</strong></h2>
+        <small class="text-muted admin"><strong>Admin Dashboard</strong></small>
+      </div>
+    </div>
+   <div class="row row-cols-1 row-cols-md-2 g-3 layout">
+  <div class="col">
+    <div class="card text-center bg-primary text-white stat-card">
+      <div class="card-body">
+        <i class="fas fa-user-graduate fa-2x mb-2"></i>
+        <h4>{{ total_students }}</h4>
+        <p class="mb-0">Total Students</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center bg-success text-white stat-card">
+      <div class="card-body">
+        <i class="fas fa-chalkboard-teacher fa-2x mb-2"></i>
+        <h4>{{ total_teachers }}</h4>
+        <p class="mb-0">Total Teachers</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center bg-warning text-white stat-card">
+      <div class="card-body">
+        <i class="fas fa-envelope fa-2x mb-2"></i>
+        <h4>{{ total_evaluations }}</h4>
+        <p class="mb-0">Total Evaluations</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center bg-info text-white stat-card">
+      <div class="card-body">
+        <i class="fas fa-book fa-2x mb-2"></i>
+        <h4>{{ total_subjects }}</h4>
+        <p class="mb-0">Total Subjects</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card layout mb-4 chart-card">
+  <div class="card-body">
+    <h5 class="mb-3"><i class="fas fa-chart-line"></i> Evaluation Progress</h5>
+    <canvas id="progressChart" height="200"></canvas>
+  </div>
+</div>
+<div class="card chart-card1 evaluationDis">
+  <div class="card-body">
+    <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Evaluation Distribution</h5>
+    <canvas id="barChart" height="200"></canvas>
+  </div>
+</div>
+
+</div>
+</section>
+<style>
+    .students-section{
+        margin-left: 270px;
+    }
+    @media (max-width: 768px) {
+       .evaluationDis{
+        position: relative;
+        top: 20px;
+       }
+       .students-section{
+        margin-left: 0px;
+       }
+       .teachers-section{
+        margin-left: 0px;
+       }
+    }
+
+</style>
+
+<section id="students" class="page-section">
+    <div class="container-fluid py-5 students-section">
+        <div class="card mb-4" style="background-color: transparent; border: none;">
+            <div class="card-body">
+                <h2><i class="fas fa-user-shield text-danger"></i><strong> System Administrator</strong></h2>
+                <small class="text-muted admin"><strong>Student Management</strong></small>
+            </div>
+        </div>
+
+        <div class="card" style="max-width: 1220px;">
+            <div class="card-header d-flex justify-content-left align-items-center flex-wrap">
+                <h4 class="mb-0">
+                    <i class="fas fa-user-graduate text-primary" style="color: #300505 !important;"></i>
+                </h4>
+                <div class="d-flex gap-1 align-items-center flex-wrap">
+                    <!-- Single Filter Button -->
+                    <button class="btn btn-outline-primary" type="button" id="filterToggleBtn">
+                        <i class="fas fa-filter"></i> Filter Students
+                    </button>
+
+                    <!-- Stats Badges -->
+                    <span class="badge bg-info">Total: <span id="totalCount">{{ students.count }}</span></span>
+                    <span class="badge bg-warning text-dark">Pending: <span id="pendingCount">{{ pending_count }}</span></span>
+                    <span class="badge bg-success">Approved: <span id="approvedCount">{{ approved_count }}</span></span>
+                </div>
+            </div>
+
+
+            <div id="filterPanel" class="card-body border-bottom bg-light" style="display: none;">
+                <div class="row g-3">
+        
+                    <div class="col-md-3">
+                        <label for="statusFilter" class="form-label fw-bold">
+                            <i class="fas fa-check-circle"></i> Status
+                        </label>
+                        <select class="form-select" id="statusFilter">
+                            <option value="">All Students</option>
+                            <option value="pending">Pending Only</option>
+                            <option value="approved">Approved Only</option>
+                        </select>
+                    </div>
+
+                    <!-- Year Level Filter -->
+                    <div class="col-md-3">
+                        <label for="yearFilter" class="form-label fw-bold">
+                            <i class="fas fa-graduation-cap"></i> Year Level
+                        </label>
+                        <select class="form-select" id="yearFilter">
+                            <option value="">All Years</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+
+                    <!-- Department Filter -->
+                    <div class="col-md-3">
+                        <label for="departmentFilter" class="form-label fw-bold">
+                            <i class="fas fa-building"></i> Department
+                        </label>
+                        <select class="form-select" id="departmentFilter">
+                            <option value="">All Departments</option>
+                            {% for dept in departments %}
+                                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>  
+
+                    <!-- Clear Filters Button -->
+                    <div class="col-12">
+                        <button type="button" class="btn btn-secondary" id="clearFilters">
+                            <i class="fas fa-undo"></i> Clear All Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading students...</p>
+                </div>
+
+                <!-- Table Section -->
+                <div id="studentsTableContainer">
+                    {% include 'partials/students_table.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Smooth transitions */
+#studentsTableContainer {
+    transition: opacity 0.3s ease;
+}
+
+#filterPanel {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom badge styles */
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-header {
+        gap: 1rem;
+    }
+}
+</style>
+<section id="reports" class="page-section">
+    <div class="container py-5">
+                    <div class="card mb-5 card-body-small">
+                        <div class="card-body">
+                            <h2><i class="fas fa-user-shield text-danger"></i><strong> System Administrator</strong></h2>
+                            <small class="text-muted admin"><strong>Evaluation Settings & Reports</strong></small>
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Period Settings -->
+                    <div class="card mb-4" style="position: relative; bottom: 70px;max-width:fit-content; left: 50px;">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-calendar-alt"></i> Evaluation Period Settings
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Current Status -->
+                            <div class="alert {% if evaluation_is_open %}alert-success{% else %}alert-warning{% endif %} mb-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-info-circle"></i> Current Status
+                                        </h6>
+                                        {% if current_evaluation_settings %}
+                                            <p class="mb-0 mt-2">
+                                                <strong>Academic Year:</strong> {{ current_evaluation_settings.academic_year.start_Year }} - {{ current_evaluation_settings.academic_year.end_Year }}<br>
+                                                <strong>Semester:</strong> {{ current_evaluation_settings.semester.name }}<br>
+                                                <strong>Status:</strong> 
+                                                {% if evaluation_is_open %}
+                                                    <span class="badge bg-success">Open</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Closed</span>
+                                                {% endif %}
+                                            </p>
+                                        {% else %}
+                                            <p class="mb-0 mt-2">No evaluation period is currently set.</p>
+                                        {% endif %}
+                                    </div>
+                                    {% if current_evaluation_settings %}
+                                        <div>
+                                            <span class="badge bg-light text-dark fs-6">
+                                                <i class="fas fa-chart-line"></i> {{ total_evaluations }} Evaluations
+                                            </span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Set/Update Evaluation Period Form -->
+                            <form method="POST" action="{% url 'set_evaluation_period' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="set_period">
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="academic_year" class="form-label">
+                                            <i class="fas fa-calendar"></i> Academic Year *
+                                        </label>
+                                        <select class="form-select" id="academic_year" name="academic_year" required>
+                                            <option value="">Select Academic Year</option>
+                                            {% for year in all_academic_years %}
+                                                <option value="{{ year.id }}" 
+                                                    {% if current_academic_year and year.id == current_academic_year.id %}selected{% endif %}>
+                                                    {{ year.name }} 
+                                                    {% if year.is_active %}(Active){% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-muted">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#createAcademicYearModal">
+                                                <i class="fas fa-plus-circle"></i> Create New
+                                            </a>
+                                        </small>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="semester" class="form-label">
+                                            <i class="fas fa-calendar-week"></i> Semester *
+                                        </label>
+                                        <select class="form-select" id="semester" name="semester" required>
+                                            <option value="">Select Semester</option>
+                                            {% for sem in all_semesters %}
+                                                <option value="{{ sem.id }}" 
+                                                    data-academic-year="{{ sem.academic_year.id }}"
+                                                    {% if current_semester and sem.id == current_semester.id %}selected{% endif %}>
+                                                    {{ sem.name }} ({{ sem.academic_year.name }})
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <small class="text-muted">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#createSemesterModal">
+                                                <i class="fas fa-plus-circle"></i> Create New
+                                            </a>
+                                        </small>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="is_open" class="form-label">
+                                            <i class="fas fa-toggle-on"></i> Evaluation Status
+                                        </label>
+                                        <div class="form-check form-switch mt-2">
+                                            <input class="form-check-input" type="checkbox" id="is_open" name="is_open"
+                                                {% if evaluation_is_open %}checked{% endif %}>
+                                            <label class="form-check-label" for="is_open">
+                                                <span id="statusLabel">
+                                                    {% if evaluation_is_open %}Open{% else %}Closed{% endif %}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-save"></i> Save Evaluation Period
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-lg" onclick="location.reload()">
+                                            <i class="fas fa-redo"></i> Refresh
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- All Evaluation Periods History -->
+                    <div class="card mb-4" style="position: relative;width: 1200px; left: 50px; bottom: 80px;">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-history"></i> Evaluation Periods History
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Academic Year</th>
+                                            <th>Semester</th>
+                                            <th>Status</th>
+                                            <th>Date Range</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if all_academic_years %}
+                                            {% for year in all_academic_years %}
+                                                {% for sem in year.semesters.all %}
+                                                    {% with settings=year.evaluation_settings.all|first %}
+                                                    <tr>
+                                                        <td>{{ year.start_Year }}-{{ year.end_Year }}</td>
+                                                        <td>{{ sem.name }}</td>
+                                                        <td>
+                                                            {% if settings and settings.is_open %}
+                                                                <span class="badge bg-success">Open</span>
+                                                            {% else %}
+                                                                <span class="badge bg-secondary">Closed</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            <small>
+                                                                {{ year.start_Year|date:"M d, Y" }} - {{ year.end_Year|date:"M d, Y" }}
+                                                            </small>
+                                                        </td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-sm btn-outline-primary" 
+                                                            onclick="setEvaluationPeriod({{ year.id }}, {{ sem.id }})">
+                                                                <i class="fas fa-edit"></i> Set Active
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    {% endwith %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">
+                                                    No evaluation periods configured yet.
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete student <strong id="deleteUsername"></strong>?</p>
+                            <p class="text-danger"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Academic Year Modal -->
+            <div class="modal fade" id="createAcademicYearModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title"><i class="fas fa-calendar-plus"></i> Create Academic Year</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form method="POST" action="{% url 'set_evaluation_period' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="create_year">
+                            
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="year_name" class="form-label">Academic Year Name *</label>
+                                    <input type="text" class="form-control" id="year_name" name="year_name" 
+                                        placeholder="e.g., 2024-2025" required>
+                                    <small class="text-muted">Format: YYYY-YYYY</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="year_start" class="form-label">Start Date *</label>
+                                    <input type="date" class="form-control" id="year_start" name="year_start" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="year_end" class="form-label">End Date *</label>
+                                    <input type="date" class="form-control" id="year_end" name="year_end" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Create Academic Year
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Semester Modal -->
+            <div class="modal fade" id="createSemesterModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title"><i class="fas fa-calendar-week"></i> Create Semester</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form method="POST" action="{% url 'set_evaluation_period' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="create_semester">
+                            
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="semester_year_id" class="form-label">Academic Year *</label>
+                                    <select class="form-select" id="semester_year_id" name="semester_year_id" required>
+                                        <option value="">Select Academic Year</option>
+                                        {% for year in all_academic_years %}
+                                            <option value="{{ year.id }}">
+                                                {{ year.start_Year }}{{year.end_Year }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="semester_name" class="form-label">Semester Name *</label>
+                                    <select class="form-select" id="semester_name" name="semester_name" required>
+                                        <option value="">Select Semester</option>
+                                        <option value="1st Semester">1st Semester</option>
+                                        <option value="2nd Semester">2nd Semester</option>
+                                        <option value="Summer">Summer</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="semester_start" class="form-label">Start Date *</label>
+                                    <input type="date" class="form-control" id="semester_start" name="semester_start" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="semester_end" class="form-label">End Date *</label>
+                                    <input type="date" class="form-control" id="semester_end" name="semester_end" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> Create Semester
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Early error handler and fallback to aid debugging (logs errors and keeps a fallback approve function)
+window.addEventListener('error', function(e) {
+    console.error('Global error caught:', e.message, e.filename, e.lineno, e.error);
+});
+
+window._approveFallback = function(userId) {
+    console.log('Fallback approve invoked for', userId);
+    alert('Fallback: approve clicked for user ' + userId + '. Check console/network for details.');
+};
+
+// Inline button handler (called from button onclick attribute).
+window._onApproveBtnClick = async function(e, userId) {
+    let button = null;
+    let originalHtml = null;
+    try {
+        e && e.preventDefault && e.preventDefault();
+        button = (e && e.currentTarget) || (e && e.target) || document.querySelector(`button[data-user-id="${userId}"]`);
+        console.log('Inline handler invoked for user:', userId, 'button:', button);
+
+        if (!button) return window._approveFallback(userId);
+
+        // small UI feedback
+        originalHtml = button.innerHTML;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+        button.disabled = true;
+
+        // simple cookie reader for CSRF
+        function readCookie(name) {
+            const cookies = document.cookie ? document.cookie.split(';') : [];
+            for (let i = 0; i < cookies.length; i++) {
+                const c = cookies[i].trim();
+                if (c.substring(0, name.length + 1) === (name + '=')) {
+                    return decodeURIComponent(c.substring(name.length + 1));
+                }
+            }
+            return null;
+        }
+
+        const approveUrl = button.dataset.approveUrl || `/admin-dashboard/approve-student/${userId}/`;
+        console.log('Approve URL (inline):', approveUrl, 'CSRFTOKEN:', readCookie('csrftoken'));
+
+        if (!confirm('Are you sure you want to approve this student?')) {
+            button.innerHTML = originalHtml; button.disabled = false; return;
+        }
+
+        const resp = await fetch(approveUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRFToken': readCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        });
+
+        if (resp.ok) {
+            const row = button.closest('tr');
+            row.querySelector('.badge.bg-warning')?.remove();
+            row.querySelector('td:nth-child(7)').innerHTML = '<span class="badge bg-success"><i class="fas fa-check-circle"></i> Approved</span>';
+            button.remove();
+            const pendingEl = document.getElementById('pendingCount');
+            const approvedEl = document.getElementById('approvedCount');
+            if (pendingEl) pendingEl.textContent = Math.max(0, parseInt(pendingEl.textContent||0) - 1);
+            if (approvedEl) approvedEl.textContent = (parseInt(approvedEl.textContent||0) + 1).toString();
+            console.log('Approved successfully (inline).');
+        } else {
+            let msg = `Error approving student (status ${resp.status}).`;
+            try { const j = await resp.json(); if (j && (j.error||j.message)) msg = j.error||j.message; } catch(e){}
+            alert(msg);
+            button.innerHTML = originalHtml; button.disabled = false;
+        }
+    } catch (err) {
+        console.error('Inline approve error:', err);
+        alert('Error approving student. See console.');
+        try { if (button) { button.innerHTML = originalHtml; button.disabled = false; } } catch(e){}
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Student filtering script loaded');
+
+    // Get filter elements
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+    const filterPanel = document.getElementById('filterPanel');
+    const statusFilter = document.getElementById('statusFilter');
+    const yearFilter = document.getElementById('yearFilter');
+    const departmentFilter = document.getElementById('departmentFilter');
+
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const tableContainer = document.getElementById('studentsTableContainer');
+
+    // Toggle filter panel
+    if (filterToggleBtn) {
+        filterToggleBtn.addEventListener('click', function() {
+            if (filterPanel.style.display === 'none') {
+                filterPanel.style.display = 'block';
+                filterToggleBtn.innerHTML = '<i class="fas fa-times"></i> Close Filters';
+            } else {
+                filterPanel.style.display = 'none';
+                filterToggleBtn.innerHTML = '<i class="fas fa-filter"></i> Filter Students';
+            }
+        });
+    }
+
+    // Debounce function for search input
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Function to fetch filtered students
+    async function fetchStudents() {
+        console.log('Fetching students with filters...');
+        
+        // Show loading spinner
+        if (loadingSpinner) loadingSpinner.style.display = 'block';
+        if (tableContainer) tableContainer.style.opacity = '0.5';
+
+        // Build query parameters
+        const params = new URLSearchParams();
+        
+        if (statusFilter && statusFilter.value) {
+            params.append('status', statusFilter.value);
+            console.log('Status filter:', statusFilter.value);
+        }
+        if (yearFilter && yearFilter.value) {
+            params.append('year_level', yearFilter.value);
+            console.log('Year filter:', yearFilter.value);
+        }
+        if (departmentFilter && departmentFilter.value) {
+            params.append('department', departmentFilter.value);
+            console.log('Department filter:', departmentFilter.value);
+        }
+
+        try {
+            // Fetch filtered data
+            const url = `/admin-dashboard/filter-students/?${params.toString()}`;
+            console.log('Fetching URL:', url);
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Received data:', data);
+
+            // Update table content
+            if (tableContainer) tableContainer.innerHTML = data.html;
+
+            // Update badges
+            const totalCountEl = document.getElementById('totalCount');
+            const pendingCountEl = document.getElementById('pendingCount');
+            const approvedCountEl = document.getElementById('approvedCount');
+            
+            if (totalCountEl) totalCountEl.textContent = data.total_count;
+            if (pendingCountEl) pendingCountEl.textContent = data.pending_count;
+            if (approvedCountEl) approvedCountEl.textContent = data.approved_count;
+
+            console.log('Table updated successfully');
+
+        } catch (error) {
+            console.error('Error fetching students:', error);
+            if (tableContainer) {
+                tableContainer.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Error loading students. Please try again.
+                        <br><small>${error.message}</small>
+                    </div>
+                `;
+            }
+        } finally {
+            // Hide loading spinner
+            if (loadingSpinner) loadingSpinner.style.display = 'none';
+            if (tableContainer) tableContainer.style.opacity = '1';
+        }
+    }
+
+    // Add event listeners to filters
+    if (statusFilter) {
+        statusFilter.addEventListener('change', function() {
+            console.log('Status changed');
+            fetchStudents();
+        });
+    }
+    
+    if (yearFilter) {
+        yearFilter.addEventListener('change', function() {
+            console.log('Year changed');
+            fetchStudents();
+        });
+    }
+    
+    if (departmentFilter) {
+        departmentFilter.addEventListener('change', function() {
+            console.log('Department changed');
+            fetchStudents();
+        });
+    }
+    
+    // Debounced search
+    if (searchFilter) {
+        searchFilter.addEventListener('input', debounce(function() {
+            console.log('Search input changed');
+            fetchStudents();
+        }, 500));
+    }
+
+    // Clear filters button
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', function() {
+            console.log('Clearing filters');
+            if (statusFilter) statusFilter.value = '';
+            if (yearFilter) yearFilter.value = '';
+            if (departmentFilter) departmentFilter.value = '';
+            if (searchFilter) searchFilter.value = '';
+            fetchStudents();
+        });
+    }
+
+    // Handle approve button clicks using event delegation
+    document.addEventListener('click', async function(e) {
+        if (e.target.closest('.approve-student-btn')) {
+            e.preventDefault();
+            const button = e.target.closest('.approve-student-btn');
+            const userId = button.dataset.userId;
+
+            console.log('Approve button clicked for user:', userId);
+
+            if (!userId) {
+                alert('Unable to determine user to approve.');
+                return;
+            }
+
+            // Prefer a pre-built URL from the button, fallback to hardcoded pattern
+            const approveUrl = button.dataset.approveUrl || `/admin-dashboard/approve-student/${userId}/`;
+
+            console.log('Approve URL:', approveUrl);
+            console.log('CSRFTOKEN:', getCookie('csrftoken'));
+
+            if (confirm('Are you sure you want to approve this student?')) {
+                try {
+                    const response = await fetch(approveUrl, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'X-CSRFToken': getCookie('csrftoken'),
+                            'X-Requested-With': 'XMLHttpRequest',
+                        }
+                    });
+
+                    if (response.ok) {
+                        console.log('Student approved successfully');
+                        // Update row instantly
+                        const row = button.closest('tr');
+                        row.querySelector('.badge.bg-warning')?.remove();
+                        row.querySelector('td:nth-child(7)').innerHTML =
+                            '<span class="badge bg-success"><i class="fas fa-check-circle"></i> Approved</span>';
+
+                        button.remove();
+
+                        // Update counters
+                        document.getElementById('pendingCount').textContent =
+                            parseInt(document.getElementById('pendingCount').textContent) - 1;
+
+                        document.getElementById('approvedCount').textContent =
+                            parseInt(document.getElementById('approvedCount').textContent) + 1;
+                    } else {
+                        let msg = 'Error approving student. Please try again.';
+                        try {
+                            const err = await response.json();
+                            if (err && err.message) msg = err.message;
+                            else if (err && err.error) msg = err.error;
+                        } catch (e) {}
+                        alert(msg + ` (status: ${response.status})`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error approving student. Please try again.');
+                }
+            }
+        }
+    });
+
+    // Function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+
+// function confirmDeleteTeacher(userId, teacherName) {
+//     document.getElementById('deleteTeacherName').textContent = teacherName;
+//     document.getElementById('confirmDeleteTeacherBtn').href =
+//         `/admin/delete-teacher/${userId}/`;
+//     new bootstrap.Modal(
+//         document.getElementById('deleteTeacherModal')
+//     ).show();
+// }
+
+document.getElementById('teacherFilterToggleBtn')?.addEventListener('click', function() {
+    const panel = document.getElementById('teacherFilterPanel');
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        this.innerHTML = '<i class="fas fa-times"></i> Close Filters';
+    } else {
+        panel.style.display = 'none';
+        this.innerHTML = '<i class="fas fa-filter"></i> Filter Teachers';
+    }
+});
+
+// Teacher filters
+document.getElementById('teacherDepartmentFilter')?.addEventListener('change', filterTeachers);
+document.getElementById('teacherSearchFilter')?.addEventListener('input', filterTeachers);
+
+function filterTeachers() {
+    const deptFilter = document.getElementById('teacherDepartmentFilter').value;
+    const searchFilter = document.getElementById('teacherSearchFilter').value.toLowerCase();
+    const rows = document.querySelectorAll('#teachersTable tbody tr');
+
+    rows.forEach(row => {
+        // skip "No teachers found" row
+        if (!row.dataset.departmentId) return;
+
+        const rowDeptId = row.dataset.departmentId;
+        const name = row.querySelector('td:nth-child(2) strong')?.textContent.toLowerCase() || '';
+        const employeeId = row.querySelector('td:nth-child(3)')?.textContent.toLowerCase() || '';
+
+        const deptMatch = !deptFilter || rowDeptId === deptFilter;
+        const searchMatch =
+            !searchFilter ||
+            name.includes(searchFilter) ||
+            employeeId.includes(searchFilter);
+
+        row.style.display = (deptMatch && searchMatch) ? '' : 'none';
+    });
+}
+
+
+// Clear teacher filters
+document.getElementById('clearTeacherFilters')?.addEventListener('click', function() {
+    document.getElementById('teacherDepartmentFilter').value = '';
+    document.getElementById('teacherSearchFilter').value = '';
+    filterTeachers();
+});
+
+// Delete teacher confirmation
+function confirmDeleteTeacher(userId, teacherName) {
+    document.getElementById('deleteTeacherName').textContent = teacherName;
+    document.getElementById('confirmDeleteTeacherBtn').href = `/admin/delete-teacher/${userId}/`;
+    new bootstrap.Modal(document.getElementById('deleteTeacherModal')).show();
+}
+
+
+// Sidebar navigation (keep this - it's fine)
+const links = document.querySelectorAll('.sidebar-item a[data-section]');
+const sections = document.querySelectorAll('.page-section');
+
+links.forEach(link => {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.dataset.section;
+
+        sections.forEach(section => {
+            section.classList.remove('active-section');
+        });
+
+        const targetSection = document.getElementById(target);
+        if (targetSection) {
+            targetSection.classList.add('active-section');
+        }
+
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        this.closest('.sidebar-item').classList.add('active');
+    });
+});
+
+
+
+const ctx = document.getElementById('progressChart');
+if (ctx) {
+    {% if top_teachers %}
+    const progressChart = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: [
+                {% for item in top_teachers %}
+                    '{{ item.teacher.user.get_full_name|truncatechars:15 }}'{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Average Rating',
+                data: [
+                    {% for item in top_teachers %}
+                        {{ item.rating }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                borderColor: 'maroon',
+                backgroundColor: 'rgba(128, 0, 0, 0.2)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 6,
+                pointHoverRadius: 10,
+                pointBackgroundColor: 'maroon',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'maroon',
+                pointHoverBorderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            animation: {
+                duration: 2500,
+                easing: 'easeInOutQuart',
+                // Animate each point sequentially
+                onProgress: function(animation) {
+                    const progress = animation.currentStep / animation.numSteps;
+                    this.data.datasets[0].pointRadius = this.data.datasets[0].data.map((val, i) => {
+                        return progress > (i / this.data.datasets[0].data.length) ? 6 : 0;
+                    });
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 5,
+                    ticks: {
+                        stepSize: 0.5,
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    callbacks: {
+                        title: function(context) {
+                            return 'Teacher: ' + context[0].label;
+                        },
+                        label: function(context) {
+                            return 'Rating: ' + context.parsed.y.toFixed(2) + ' / 5.00';
+                        },
+                        afterLabel: function(context) {
+                            const index = context.dataIndex;
+                            const evals = [
+                                {% for item in top_teachers %}
+                                    {{ item.total_evals }}{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            ];
+                            return 'Total Evaluations: ' + evals[index];
+                        }
+                    }
+                }
+            },
+            // Add hover animations
+            onHover: function(event, elements) {
+                event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+            }
+        }
+    });
+
+    // Add pulse animation effect every 5 seconds
+    setInterval(() => {
+        progressChart.update({
+            duration: 800,
+            easing: 'easeInOutBounce'
+        });
+    }, 5000);
+
+    {% else %}
+    // No data available - show message
+    ctx.parentElement.innerHTML = '<p class="text-center text-muted py-5">No evaluation data available yet</p>';
+    {% endif %}
+}
+
+const ctxBar = document.getElementById('barChart');
+if (ctxBar) {
+    const barChart = new Chart(ctxBar.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Students', 'Teachers', 'Evaluations', 'Subjects'],
+            datasets: [{
+                label: 'Total Count',
+                data: [
+                    {{ total_students }}, 
+                    {{ total_teachers }}, 
+                    {{ total_evaluations }}, 
+                    {{ total_subjects }}
+                ],
+                backgroundColor: [
+                    'rgba(0, 123, 255, 0.8)',
+                    'rgba(128, 0, 0, 0.8)',
+                    'rgba(255, 193, 7, 0.8)',
+                    'rgba(23, 162, 184, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(128, 0, 0, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(23, 162, 184, 1)'
+                ],
+                borderWidth: 2,
+                borderRadius: 8,
+                hoverBackgroundColor: [
+                    'rgba(0, 123, 255, 1)',
+                    'rgba(128, 0, 0, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(23, 162, 184, 1)'
+                ],
+                hoverBorderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutBounce',
+                // Bars grow from bottom
+                animateScale: true,
+                animateRotate: true
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        font: {
+                            size: 11
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 11,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.y;
+                        },
+                        afterLabel: function(context) {
+                            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed.y / total) * 100).toFixed(1);
+                            return 'Percentage: ' + percentage + '%';
+                        }
+                    }
+                }
+            },
+            // Add hover animations
+            onHover: function(event, elements) {
+                event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+            }
+        }
+    });
+
+    // Add subtle floating animation to bars
+    let direction = 1;
+    setInterval(() => {
+        const data = barChart.data.datasets[0].data;
+        barChart.data.datasets[0].data = data.map((value, index) => {
+            // Add small random variation (±2%)
+            const variation = (Math.random() * 0.04 - 0.02) * value;
+            return Math.max(0, value + variation * direction);
+        });
+        direction *= -1; // Reverse direction
+        
+        barChart.update({
+            duration: 1500,
+            easing: 'easeInOutSine',
+            lazy: false
+        });
+    }, 3000);
+}
+
+// Add shimmer effect on chart cards
+document.querySelectorAll('.chart-card, .chart-card1').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+        this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.15)';
+        this.style.transition = 'all 0.3s ease';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+    });
+});
+
+// Add stat card animations
+document.querySelectorAll('.stat-card').forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, index * 150);
+    
+    // Add hover effect
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+        this.style.transition = 'all 0.3s ease';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+});
+
+// Animate numbers counting up
+function animateValue(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const value = Math.floor(progress * (end - start) + start);
+        element.textContent = value;
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Animate stat cards numbers on page load
+window.addEventListener('load', function() {
+    const statCards = document.querySelectorAll('.stat-card h4');
+    statCards.forEach(card => {
+        const finalValue = parseInt(card.textContent);
+        if (!isNaN(finalValue)) {
+            card.textContent = '0';
+            setTimeout(() => {
+                animateValue(card, 0, finalValue, 2000);
+            }, 500);
+        }
+    });
+});
+const isOpenCheckbox = document.getElementById('is_open');
+if (isOpenCheckbox) {
+    isOpenCheckbox.addEventListener('change', function() {
+        const label = document.getElementById('statusLabel');
+        if (label) {
+            label.textContent = this.checked ? 'Open' : 'Closed';
+        }
+    });
+}
+
+// Filter semesters based on academic year
+const academicYearSelect = document.getElementById('academic_year');
+if (academicYearSelect) {
+    academicYearSelect.addEventListener('change', function() {
+        const selectedYearId = this.value;
+        const semesterSelect = document.getElementById('semester');
+        const allOptions = semesterSelect.querySelectorAll('option');
+        
+        allOptions.forEach(option => {
+            if (option.value === '') {
+                option.style.display = 'block';
+                return;
+            }
+            
+            const optionYearId = option.getAttribute('data-academic-year');
+            if (selectedYearId === '' || optionYearId === selectedYearId) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+        
+        if (semesterSelect.selectedOptions[0] && 
+            semesterSelect.selectedOptions[0].style.display === 'none') {
+            semesterSelect.value = '';
+        }
+    });
+}
+
+// Quick set evaluation period
+function setEvaluationPeriod(yearId, semesterId) {
+    document.getElementById('academic_year').value = yearId;
+    document.getElementById('semester').value = semesterId;
+    
+    const event = new Event('change');
+    document.getElementById('academic_year').dispatchEvent(event);
+    
+    const form = document.querySelector('form[action*="set_evaluation_period"]');
+    if (form) {
+        form.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+        });
+        
+        const formCard = form.closest('.card');
+        formCard.style.boxShadow = '0 0 20px rgba(0,123,255,0.5)';
+        setTimeout(() => {
+            formCard.style.boxShadow = '';
+        }, 2000);
+    }
+}
+
+// Delete confirmation
+function confirmDelete(userId, username) {
+    document.getElementById('deleteUsername').textContent = username;
+    document.getElementById('confirmDeleteBtn').href = `/admin-dashboard/delete-user/${userId}/`;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+<script>    
+function setEvaluationPeriod(yearId, semesterId) {
+    document.getElementById('academic_year').value = yearId;
+    document.getElementById('semester').value = semesterId;
+    
+    // Trigger change event to filter semesters
+    const event = new Event('change');
+    document.getElementById('academic_year').dispatchEvent(event);
+    
+    // Scroll to form
+    const form = document.querySelector('form[action*="set_evaluation_period"]');
+    if (form) {
+        form.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+        });
+        
+        // Highlight form briefly
+        const formCard = form.closest('.card');
+        formCard.style.boxShadow = '0 0 20px rgba(0,123,255,0.5)';
+        setTimeout(() => {
+            formCard.style.boxShadow = '';
+        }, 2000);
+    }
+}
+document.getElementById('subjectFilterToggleBtn')?.addEventListener('click', function() {
+    const panel = document.getElementById('subjectFilterPanel');
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        this.innerHTML = '<i class="fas fa-times"></i> Close Filters';
+    } else {
+        panel.style.display = 'none';
+        this.innerHTML = '<i class="fas fa-filter"></i> Filter Subjects';
+    }
+});
+
+// Subject filters
+document.getElementById('subjectDepartmentFilter')?.addEventListener('change', filterSubjects);
+document.getElementById('subjectYearLevelFilter')?.addEventListener('change', filterSubjects);
+document.getElementById('subjectSearchFilter')?.addEventListener('input', filterSubjects);
+
+function filterSubjects() {
+    const deptFilter = document.getElementById('subjectDepartmentFilter').value;
+    const yearFilter = document.getElementById('subjectYearLevelFilter').value;
+    const searchFilter = document.getElementById('subjectSearchFilter').value.toLowerCase();
+    const rows = document.querySelectorAll('#subjectsTable tbody tr');
+    
+    rows.forEach(row => {
+        // Skip "No subjects found" row
+        if (!row.dataset.departmentId) return;
+        
+        const rowDeptId = row.dataset.departmentId;
+        const rowYearLevel = row.dataset.yearLevel;
+        const code = row.querySelector('td:nth-child(1)')?.textContent.toLowerCase() || '';
+        const name = row.querySelector('td:nth-child(2) strong')?.textContent.toLowerCase() || '';
+        
+        const deptMatch = !deptFilter || rowDeptId === deptFilter;
+        const yearMatch = !yearFilter || rowYearLevel === yearFilter;
+        const searchMatch = !searchFilter || code.includes(searchFilter) || name.includes(searchFilter);
+        
+        row.style.display = (deptMatch && yearMatch && searchMatch) ? '' : 'none';
+    });
+}
+
+// Clear subject filters
+document.getElementById('clearSubjectFilters')?.addEventListener('click', function() {
+    document.getElementById('subjectDepartmentFilter').value = '';
+    document.getElementById('subjectYearLevelFilter').value = '';
+    document.getElementById('subjectSearchFilter').value = '';
+    filterSubjects();
+});
+
+// Delete subject confirmation
+function confirmDeleteSubject(subjectId, subjectName) {
+    document.getElementById('deleteSubjectName').textContent = subjectName;
+    document.getElementById('confirmDeleteSubjectBtn').href = `/delete-subject/${subjectId}/`;
+    new bootstrap.Modal(document.getElementById('deleteSubjectModal')).show();
+}
+
+</script>
+{% endblock %}

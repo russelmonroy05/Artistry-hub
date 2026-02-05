@@ -1,0 +1,718 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+.evaluation-detail-container {
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+.evaluation-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.evaluation-header {
+    background: linear-gradient(135deg, maroon 0%, #480202 100%);
+    color: white;
+    padding: 25px 30px;
+}
+
+.evaluation-body {
+    padding: 30px;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border-left: 4px solid maroon;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.section-title {
+    color: maroon;
+    border-bottom: 2px solid maroon;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.rating-row {
+    padding: 12px;
+    border-bottom: 1px solid #e9ecef;
+    transition: background 0.3s;
+}
+
+.rating-row:hover {
+    background: #f8f9fa;
+}
+
+.rating-row:last-child {
+    border-bottom: none;
+}
+
+.rating-label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.rating-stars {
+    color: #ffc107;
+    font-size: 1.1rem;
+}
+
+.rating-stars i {
+    margin: 0 2px;
+}
+
+.category-average {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.overall-rating {
+    background: linear-gradient(135deg, maroon 0%, #480202 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.3rem;
+    margin: 30px 0;
+}
+
+.problem-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-right: 5px;
+}
+
+.problem-serious {
+    background: #dc3545;
+    color: white;
+}
+
+.problem-moderate {
+    background: #ffc107;
+    color: #000;
+}
+
+.problem-minor {
+    background: #28a745;
+    color: white;
+}
+
+.suggestions-box {
+    background: #e7f3ff;
+    border-left: 4px solid #0066cc;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.back-btn {
+    background: maroon;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    transition: all 0.3s;
+}
+
+.back-btn:hover {
+    background: #480202;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(128, 0, 0, 0.3);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="evaluation-detail-container">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="evaluation-card">
+                    <!-- Header -->
+                    <div class="evaluation-header">
+                        <h3 class="mb-0">
+                            <i class="fas fa-clipboard-check"></i> Teacher Evaluation Details
+                        </h3>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="evaluation-body">
+                        <!-- Basic Info -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <p class="mb-2"><i class="fas fa-chalkboard-teacher text-danger"></i> <strong>Teacher:</strong></p>
+                                    <h5 class="mb-0">{{ evaluation.teacher.user.get_full_name }}</h5>
+                                    <small class="text-muted">{{ evaluation.teacher.employee_id }}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <p class="mb-2"><i class="fas fa-book text-primary"></i> <strong>Subject:</strong></p>
+                                    <h5 class="mb-0">{{ evaluation.subject.code }} - {{ evaluation.subject.name }}</h5>
+                                    <small class="text-muted">{{ evaluation.subject.get_year_level_display }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <p class="mb-2"><i class="fas fa-calendar text-success"></i> <strong>Academic Period:</strong></p>
+                                    <p class="mb-0">{{ evaluation.academic_year.name }} - {{ evaluation.semester.name }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-box">
+                                    <p class="mb-2"><i class="fas fa-clock text-warning"></i> <strong>Evaluation Date:</strong></p>
+                                    <p class="mb-0">{{ evaluation.created_at|date:"F d, Y - g:i A" }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Overall Rating -->
+                        <div class="overall-rating">
+                            <h4 class="mb-2">Overall Average Rating</h4>
+                            <div class="rating-stars" style="font-size: 2rem;">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= evaluation.get_average_rating %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <h2 class="mt-2 mb-0">{{ evaluation.get_average_rating }}/5.00</h2>
+                        </div>
+
+                        <!-- PART I: PRESENTATION OF LESSON -->
+                        <h5 class="section-title mt-4">
+                            <i class="fas fa-presentation"></i> Part I: Presentation of Lesson
+                        </h5>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Communicates clearly the objectives</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.presentation_objectives %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-primary ms-2">{{ evaluation.presentation_objectives }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Uses motivational techniques</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.presentation_motivation %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-primary ms-2">{{ evaluation.presentation_motivation }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Relates previous lesson to present</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.presentation_relation %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-primary ms-2">{{ evaluation.presentation_relation }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Checks assignments</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.presentation_assignments %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-primary ms-2">{{ evaluation.presentation_assignments }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-average">
+                            <strong>Presentation Average:</strong> {{ evaluation.get_presentation_average }}/5.00
+                        </div>
+
+                        <!-- PART II: DEVELOPMENT OF LESSON -->
+                        <h5 class="section-title mt-4">
+                            <i class="fas fa-book-reader"></i> Part II: Development of the Lesson
+                        </h5>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Anticipates difficulties of students</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_anticipates %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_anticipates }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Demonstrates mastery of the lesson</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_mastery %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_mastery }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Develops lesson logically</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_logical %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_logical }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Provides opportunities for free expression</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_expression %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_expression }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Student participation in decision making</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_participation %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_participation }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Asks questions of various levels</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_questions %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_questions }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Integrates values in the lesson</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_values %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_values }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Provides appropriate reinforcement</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_reinforcement %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_reinforcement }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Keeps majority of students involved</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_involvement %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_involvement }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Speaks in well-modulated voice</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_voice %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_voice }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Observes correct grammar</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_grammar %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_grammar }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Monitors student progress</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_monitoring %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_monitoring }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Utilizes instructional time productively</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.dev_time %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-success ms-2">{{ evaluation.dev_time }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-average">
+                            <strong>Development Average:</strong> {{ evaluation.get_development_average }}/5.00
+                        </div>
+
+                        <!-- PART III: EXPECTED STUDENT BEHAVIOR -->
+                        <h5 class="section-title mt-4">
+                            <i class="fas fa-users"></i> Part III: Expected Student Behavior
+                        </h5>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Students answer in own words at designed level</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.student_answers %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-warning text-dark ms-2">{{ evaluation.student_answers }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Students ask relevant questions</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.student_questions %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-warning text-dark ms-2">{{ evaluation.student_questions }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Students actively engaged in learning</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.student_engagement %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-warning text-dark ms-2">{{ evaluation.student_engagement }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Students work within time frame</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.student_timeframe %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-warning text-dark ms-2">{{ evaluation.student_timeframe }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Students abide by majority decision</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.student_majority %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-warning text-dark ms-2">{{ evaluation.student_majority }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-average">
+                            <strong>Student Behavior Average:</strong> {{ evaluation.get_student_behavior_average }}/5.00
+                        </div>
+
+                        <!-- PART IV: WRAP-UP -->
+                        <h5 class="section-title mt-4">
+                            <i class="fas fa-check-circle"></i> Part IV: Wrap-up
+                        </h5>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Provides opportunities to demonstrate learnings</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.wrapup_demonstrate %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-info ms-2">{{ evaluation.wrapup_demonstrate }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rating-row">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="rating-label">Students synthesize learning through integration</span>
+                                <div>
+                                    <span class="rating-stars">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= evaluation.wrapup_synthesize %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="badge bg-info ms-2">{{ evaluation.wrapup_synthesize }}/5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-average">
+                            <strong>Wrap-up Average:</strong> {{ evaluation.get_wrapup_average }}/5.00
+                        </div>
+
+                        <!-- PART V: PROBLEMS MET -->
+                        <h5 class="section-title mt-4">
+                            <i class="fas fa-exclamation-triangle"></i> Part V: Problems Met
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <p class="mb-2"><strong>Late in Coming to Class</strong></p>
+                                    {% if evaluation.problem_late == 3 %}
+                                        <span class="problem-badge problem-serious">Very Serious</span>
+                                    {% elif evaluation.problem_late == 2 %}
+                                        <span class="problem-badge problem-moderate">Serious</span>
+                                    {% else %}
+                                        <span class="problem-badge problem-minor">Not Serious</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <p class="mb-2"><strong>Absenteeism</strong></p>
+                                    {% if evaluation.problem_absent == 3 %}
+                                        <span class="problem-badge problem-serious">Very Serious</span>
+                                    {% elif evaluation.problem_absent == 2 %}
+                                        <span class="problem-badge problem-moderate">Serious</span>
+                                    {% else %}
+                                        <span class="problem-badge problem-minor">Not Serious</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center p-3 border rounded">
+                                    <p class="mb-2"><strong>Very Long Video (>30min)</strong></p>
+                                    {% if evaluation.problem_video == 3 %}
+                                        <span class="problem-badge problem-serious">Very Serious</span>
+                                    {% elif evaluation.problem_video == 2 %}
+                                        <span class="problem-badge problem-moderate">Serious</span>
+                                    {% else %}
+                                        <span class="problem-badge problem-minor">Not Serious</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PART VI: SUGGESTIONS -->
+                        {% if evaluation.suggestions %}
+                        <h5 class="section-title mt-4">
+                            <i class="fas fa-lightbulb"></i> Part VI: Suggestions for Improvement
+                        </h5>
+                        <div class="suggestions-box">
+                            <p class="mb-0">{{ evaluation.suggestions }}</p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Back Button -->
+                        <div class="text-center mt-4">
+                            {% if user.user_type == 'student' %}
+                                <a href="{% url 'student_dashboard' %}" class="back-btn">
+                                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                </a>
+                            {% elif user.user_type == 'teacher' %}
+                                <a href="{% url 'teacher_dashboard' %}" class="back-btn">
+                                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                </a>
+                            {% else %}
+                                <a href="{% url 'admin_dashboard' %}" class="back-btn">
+                                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

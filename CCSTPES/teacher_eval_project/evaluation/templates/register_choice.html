@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="col-md-10">
+            <div class="text-center text-white mb-5">
+                <h2 class="display-5 fw-bold">Choose Your Account Type</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body text-center p-5">
+                            <i class="fas fa-user-graduate fa-5x text-primary mb-4"></i>
+                            <h3 class="card-title mb-3">Student</h3>
+                            <p class="card-text mb-4">Register as a student to evaluate your teachers and provide
+                                feedback</p>
+                            <a href="{% url 'student_register' %}" class="btn btn-primary btn-lg">
+                                Register as Student <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body text-center p-5">
+                            <i class="fas fa-chalkboard-teacher fa-5x text-success mb-4"></i>
+                            <h3 class="card-title mb-3">Teacher</h3>
+                            <p class="card-text mb-4">Register as a teacher to receive evaluations and improve your
+                                teaching</p>
+                            <a href="{% url 'teacher_register' %}" class="btn btn-success btn-lg">
+                                Register as Teacher <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

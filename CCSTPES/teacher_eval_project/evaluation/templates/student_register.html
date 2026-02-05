@@ -1,0 +1,465 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block extra_css %}
+
+
+
+<link rel="stylesheet" href="{% static 'css/student_register.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<style>
+    .cor-upload-section {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 2px dashed #3b82f6;
+}
+
+.cor-icon {
+    font-size: 3rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+}
+
+.cor-upload-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cor-upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+}
+
+.cor-file-name {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 8px;
+    color: #2563eb;
+    font-weight: 600;
+    display: none;
+}
+
+.cor-file-name.show {
+    display: block;
+}
+    /* Profile Picture Upload Styles */
+.profile-upload-section {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.profile-preview-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 1rem 0;
+    cursor: pointer;
+}
+
+.profile-preview-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #667eea;
+    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.profile-preview-wrapper:hover .profile-preview-img {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+}
+
+.profile-upload-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.profile-preview-wrapper:hover .profile-upload-overlay {
+    transform: scale(1.1);
+}
+</style>
+<div class="container">
+    {% if request.GET.verified == 'success' %}
+    <div class="alert alert-success fade show">
+        <i class="fas fa-check-circle"></i>
+        <strong>Great!</strong> Your email has been verified successfully!
+        <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">&times;</button>
+    </div>
+    {% endif %}
+
+    <div class="student-register-container">
+        <div class="header">
+            <i class='bxr  bxs-education'></i>
+            <h3>Student Registration</h3>
+        </div>
+        <p class="subtitle">Create your account to get started</p>
+
+        <form method="POST" id="registrationForm" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Profile Picture Upload Section -->
+                <div class="profile-upload-section mb-4">
+                    <div class="text-center">
+                        <label class="form-label fw-bold">Profile Picture (Optional)</label>
+                        
+                        <!-- Image Preview -->
+                        <div class="profile-preview-wrapper">
+                            <img id="profilePreview" 
+                                src="https://ui-avatars.com/api/?name=User&background=667eea&color=fff&size=150" 
+                                alt="Profile Preview"
+                                class="profile-preview-img">
+                            <div class="profile-upload-overlay">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- File Input (hidden) -->
+                        <input type="file" 
+                            class="d-none" 
+                            name="profile_picture" 
+                            id="profilePictureInput"
+                            accept="image/*"
+                            onchange="previewProfilePicture(event)">
+                        
+                        <!-- Upload Button -->
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="document.getElementById('profilePictureInput').click()">
+                            <i class="fas fa-upload"></i> Choose Photo
+                        </button>
+
+                        
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> 
+                                JPG, PNG, or GIF (Max 2MB)
+                            </small>
+                        </div>
+                        
+                        {% if form.profile_picture.errors %}
+                            <div class="text-danger mt-2">
+                                <small>{{ form.profile_picture.errors }}</small>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="cor-upload-section">
+                <div class="text-center">
+                    <i class="fas fa-file-pdf cor-icon"></i>
+                    <h5>Certificate of Registration (COR) *</h5>
+                    <p class="text-muted mb-3">
+                        Upload your COR so the admin can assign your subjects and teachers
+                    </p>
+                    
+                    <input type="file" 
+                        class="d-none" 
+                        name="certificate_of_registration" 
+                        id="corInput"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        required
+                        onchange="showCorFileName(event)">
+                    
+                    <button type="button" class="cor-upload-btn" onclick="document.getElementById('corInput').click()">
+                        <i class="fas fa-upload"></i> Choose COR File
+                    </button>
+                    
+                    <div class="cor-file-name" id="corFileName">
+                        <i class="fas fa-file-check"></i>
+                        <span id="corFileNameText"></span>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            Accepted formats: PDF, JPG, PNG (Max 5MB)
+                        </small>
+                    </div>
+                    
+                    {% if form.certificate_of_registration.errors %}
+                        <div class="text-danger mt-2">
+                            <small>{{ form.certificate_of_registration.errors }}</small>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+                
+
+                <!-- Name Fields -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">First Name *</label>
+                        <input type="text" class="form-control custom-input" name="first_name" required placeholder="John">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Middle Name</label>
+                        <input type="text" class="form-control custom-input" name="middle_name" placeholder="Michael">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Last Name *</label>
+                        <input type="text" class="form-control custom-input" name="last_name" required placeholder="Doe">
+                    </div>
+                </div>
+
+                <!-- Username and Email -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Username *</label>
+                        <input type="text" class="form-control custom-input" name="username" required placeholder="johndoe">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email *</label>
+                        <div class="d-flex gap-2">
+                            <input type="email" class="form-control custom-input flex-1" id="emailInput" name="email"
+                                required placeholder="john@example.com">
+                            <button type="button" class="btn btn-outline-primary btn-verify-email" id="verifyEmailBtn">
+                                <i class="fas fa-envelope"></i> Verify
+                            </button>
+                        </div>
+                        <input type="hidden" id="emailVerifiedFlag" value="false">
+                    </div>
+                </div>
+
+                <!-- Student ID and Year Level -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Student ID *</label>
+                        <input type="text" class="form-control custom-input" name="student_id_number" required
+                            placeholder="2024-12345">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Year Level *</label>
+                        <select class="form-select custom-input" name="year_level" required>
+                            <option value="">Select year level</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Phone and Course -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control custom-input" name="phone" placeholder="+1 (555) 000-0000">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Course *</label>
+                        <input type="text" 
+                            class="form-control custom-input" 
+                            name="course" 
+                            value="College of Computer Science" 
+                            readonly>
+                    </div>
+                </div>
+
+                <!-- Passwords -->
+                <div class="row">
+                    <div class="col-md-6 mb-3 position-relative">
+                        <label class="form-label">Password *</label>
+                        <input type="password" id="password" class="form-control custom-input" name="password1" required
+                            placeholder="Enter password">
+                        <i class='bx bx-show eye-icon' id="togglePass"></i>
+                    </div>
+
+                    <div class="col-md-6 mb-3 position-relative">
+                        <label class="form-label">Confirm Password *</label>
+                        <input type="password" id="password2" class="form-control custom-input" name="password2" required
+                            placeholder="Confirm password">
+                        <i class='bx bx-show eye-icon' id="togglePass2"></i>
+                    </div>
+                </div>
+
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{ form.errors }}
+                </div>
+                {% endif %}
+
+                <!-- Terms and Conditions -->
+                <div class="terms-container">
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="termsCheckbox" name="terms">
+                        <label for="termsCheckbox" class="terms-label">
+                            I agree to the <a href="#" onclick="showTermsModal(event)">Terms and Conditions</a> and 
+                                <a href="#" onclick="showPrivacyModal(event)">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <div class="terms-error" id="termsError">
+                        <i class="fas fa-exclamation-circle"></i> You must accept the terms and conditions to register
+                    </div>
+                </div>
+
+                <button type="submit" class="register-btn" id="submitBtn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <small>Already have an account? <a href="{% url 'login' %}">Login here</a></small>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal" id="emailVerifyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-envelope-open-text"></i> Email Verification
+                </h5>
+                <button type="button" class="btn-close btn-close-white" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <!-- Sending Phase -->
+                <div id="sendingPhase">
+                    <div class="spinner-border">
+                        <span class="visually-hidden">Sending...</span>
+                    </div>
+                    <p class="fw-bold mt-3">Sending verification email...</p>
+                    <p class="text-muted" id="sendingEmail"></p>
+                </div>
+
+                <!-- Waiting Phase -->
+                <div id="waitingPhase" style="display:none;">
+                    <i class="fas fa-envelope fa-4x text-primary mb-3" style="display:block; margin-bottom:1rem;"></i>
+                    <h5>Check Your Email!</h5>
+                    <p>We've sent a verification link to:</p>
+                    <p class="fw-bold text-primary" id="verificationEmail"></p>
+                    <p class="text-muted">Click the link in the email to verify your account.</p>
+                    <hr style="margin: 1.5rem 0; border: 1px solid #e0e0e0;">
+                    <div class="text-muted">
+                        <small>
+                            <i class="fas fa-clock"></i> Waiting... <span id="timeElapsed">0</span>s
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Success Phase -->
+                <div id="successPhase" style="display:none;">
+                    <i class="fas fa-check-circle verification-success"></i>
+                    <h5 class="text-success mt-3">Email Verified!</h5>
+                    <p class="text-muted">You can now complete your registration</p>
+                </div>
+
+                <!-- Error Phase -->
+                <div id="errorPhase" style="display:none;">
+                    <i class="fas fa-exclamation-triangle fa-4x text-danger"
+                        style="display:block; margin-bottom:1rem;"></i>
+                    <h5 class="text-danger">Verification Failed</h5>
+                    <p id="errorMessage" class="text-muted"></p>
+                    <button type="button" class="btn btn-primary" id="retryBtn"
+                        style="background: #667eea; margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Profile Picture Preview
+function previewProfilePicture(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('profilePreview');
+    
+    if (file) {
+        // Validate file size (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('❌ File size must be under 2MB');
+            event.target.value = '';
+            return;
+        }
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('❌ Please select an image file');
+            event.target.value = '';
+            return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            
+            // Add success animation
+            preview.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                preview.style.transform = 'scale(1)';
+            }, 300);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Make the preview image clickable
+document.addEventListener('DOMContentLoaded', function() {
+    const previewWrapper = document.querySelector('.profile-preview-wrapper');
+    if (previewWrapper) {
+        previewWrapper.addEventListener('click', function() {
+            document.getElementById('profilePictureInput').click();
+        });
+    }
+});
+function showCorFileName(event) {
+    const file = event.target.files[0];
+    const fileNameDiv = document.getElementById('corFileName');
+    const fileNameText = document.getElementById('corFileNameText');
+    
+    if (file) {
+        // Check file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('❌ File size must be under 5MB');
+            event.target.value = '';
+            return;
+        }
+        
+        // Check file type
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (!['pdf', 'jpg', 'jpeg', 'png'].includes(ext)) {
+            alert('❌ Please select a PDF, JPG, or PNG file');
+            event.target.value = '';
+            return;
+        }
+        
+        fileNameText.textContent = file.name;
+        fileNameDiv.classList.add('show');
+    }
+}
+</script>
+<script src="{% static 'js/student_register.js' %}"></script>
+{% endblock %}

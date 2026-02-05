@@ -1,0 +1,138 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block title %}<title>Login - TPES</title>{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="login-section">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-left">
+                <div class="login-left-content">
+                    <img src="{% static 'images/osme_logo.jpg' %}" alt="OSME Logo" class="logo">
+                    <h2 class="brand-title">Teacher Evaluation System</h2>
+                    <p class="brand-description">Driving educational excellence through systematic evaluation and
+                        feedback.
+                    </p>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Secure Authentication</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bolt"></i>
+                            <span>Fast & Reliable</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-users"></i>
+                            <span>Professional Platform</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-right">
+                <div class="login-form-wrapper">
+                    <h2 class="login-title">Welcome Back</h2>
+                    <p class="login-subtitle">Please enter your credentials to continue</p>
+
+                    <form method="POST" action="{% url 'login' %}" class="login-form" id="loginForm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="username" name="username" required class="form-control"
+                                    placeholder="Username" autocomplete="username">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="password" name="password" required class="form-control"
+                                    placeholder="Password" autocomplete="current-password">
+                                <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+                            </div>
+                        </div>
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="login-alert alert-{{ message.tags }}" role="alert">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" name="remember">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn-login" id="signInBtn">
+                            <span id="btnText">Sign In</span>
+                            <i class="fas fa-arrow-right" id="btnIcon"></i>
+                        </button>
+                    </form>
+
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+
+                    <div class="register-link">
+                        <p>Don't have an account? <a href="#" onclick="openModal()">Create one now</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="getStartedModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+
+            <div class="modal-header-text">
+                <img src="{% static 'images/osme_logo.jpg' %}" class="modal-school-logo" alt="Osmeña Colleges Logo">
+                <h2>Welcome to Osmeña Colleges Evaluation System</h2>
+                <p>Please choose your account type to get started</p>
+            </div>
+
+            <div class="account-type-options">
+                <!-- Student Option -->
+                <div class="account-card">
+                    <div class="account-card-body">
+                        <i class="fas fa-user-graduate account-icon student-icon"></i>
+                        <h3 class="account-title">Student</h3>
+                        <p class="account-description">Register as a student to evaluate your teachers and provide
+                            feedback</p>
+                        <a href="{% url 'student_register' %}" class="account-btn student-btn">
+                            Register as Student <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Teacher Option -->
+                <div class="account-card">
+                    <div class="account-card-body">
+                        <i class="fas fa-chalkboard-teacher account-icon teacher-icon"></i>
+                        <h3 class="account-title">Teacher</h3>
+                        <p class="account-description">Register as a teacher to receive evaluations and improve your
+                            teaching</p>
+                        <a href="{% url 'teacher_register' %}" class="account-btn teacher-btn">
+                            Register as Teacher <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{% static 'js/login.js' %}"></script>
+
+</section>
+
+{% endblock %}
